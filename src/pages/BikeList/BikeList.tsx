@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface Bike {
   _id: string;
@@ -80,7 +81,7 @@ const BikeList: React.FC = () => {
         <input
           type="text"
           placeholder="🔍 Search by name, brand or model..."
-          className="border border-gray-300 px-4 py-2 rounded-md focus:outline-blue-400 w-full"
+          className="border border-gray-300 px-4 py-2 rounded-md focus:outline-blue-400 w-full text-sm"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -88,7 +89,7 @@ const BikeList: React.FC = () => {
         <select
           value={filterBrand}
           onChange={(e) => setFilterBrand(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded-md w-full"
+          className="border border-gray-300 px-4 py-2 rounded-md w-full text-sm"
         >
           <option value="">All Brands</option>
           {brands.map((brand) => (
@@ -109,11 +110,11 @@ const BikeList: React.FC = () => {
       </div>
 
       {/* Bike Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredBikes.slice(0, visibleCount).map((bike) => (
           <div
             key={bike._id}
-            className="border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden bg-white flex flex-col"
+            className="border rounded-xl shadow hover:shadow-lg transition-all duration-200 overflow-hidden bg-white flex flex-col"
           >
             <img
               src={bike.imageUrls?.[0] || "https://via.placeholder.com/400x250"}
@@ -143,11 +144,13 @@ const BikeList: React.FC = () => {
                   {bike.isAvailable ? "Available" : "Not Available"}
                 </p>
 
-                <button
-                  onClick={() => alert(`Details of ${bike.name}`)}
-                  className="mt-3 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm w-full"
-                >
-                  Details
+                <button className="mt-3 w-full">
+                  <Link
+                    to={`/bike-details/${bike._id}`}
+                    className="block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm text-center"
+                  >
+                    View Details
+                  </Link>
                 </button>
               </div>
             </div>
@@ -160,7 +163,7 @@ const BikeList: React.FC = () => {
         <div className="text-center mt-10">
           <button
             onClick={handleSeeMore}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-5 py-2 rounded-md"
+            className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-5 py-2 rounded-md transition"
           >
             See More
           </button>

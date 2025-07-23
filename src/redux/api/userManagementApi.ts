@@ -7,6 +7,8 @@ export interface UserApi {
 	email: string;
 	role: string;
 	profilePicture?: string;
+	phone?: string;
+	address?: string
 }
 
 export interface UsersResponse {

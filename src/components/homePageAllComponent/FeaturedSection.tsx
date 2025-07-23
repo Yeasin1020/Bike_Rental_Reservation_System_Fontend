@@ -88,7 +88,7 @@ const FeaturedSection: React.FC = () => {
                   </p>
                   <button className="mt-3 w-full">
                     <Link
-                      to={`/bike-detail/${bike._id}`}
+                      to={`/bike-details/${bike._id}`}
                       className="block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm text-center"
                     >
                       View Details
