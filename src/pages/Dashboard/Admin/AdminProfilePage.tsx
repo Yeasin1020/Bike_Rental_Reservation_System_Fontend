@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import { AppDispatch, RootState } from "../../../redux/store";
@@ -19,7 +19,7 @@ const AdminProfilePage: React.FC = () => {
     data: profile,
     isLoading: isFetching,
     isError,
-  } = useGetProfileQuery();
+  } = useGetProfileQuery(undefined);
   const [updateProfile, { isLoading: isSaving }] = useUpdateProfileMutation();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -77,7 +77,7 @@ const AdminProfilePage: React.FC = () => {
       }
 
       await updateProfile({
-        userId: user?._id,
+        userId: user?._id as string,
         userData: updatedData,
       }).unwrap();
 

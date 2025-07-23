@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useGetBikesQuery } from "../../redux/api/bikeApi";
 import { Bike } from "../../utils/type/bike";

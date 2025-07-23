@@ -1,4 +1,3 @@
-import React from "react";
 import HeroSection from "../../components/homePageAllComponent/HeroSection";
 import FeaturedSection from "../../components/homePageAllComponent/FeaturedSection";
 import Testimonials from "../../components/homePageAllComponent/Testimonials";

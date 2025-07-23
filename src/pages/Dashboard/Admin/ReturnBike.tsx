@@ -1,18 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import {
   useGetAllRentalsQuery,
   useReturnBikeMutation,
 } from "../../../redux/api/bikeRentalApi";
-
-interface Rentals {
-  id: string;
-  bikeName: string;
-  userName: string;
-  startTime: string;
-  endTime?: string;
-  cost?: number;
-  status: "ongoing" | "returned";
-}
 
 const ReturnBike: React.FC = () => {
   // Fetch all rental data from the API
@@ -22,7 +13,7 @@ const ReturnBike: React.FC = () => {
     isError: isFetchError,
     error: fetchError,
     refetch,
-  } = useGetAllRentalsQuery();
+  } = useGetAllRentalsQuery(undefined);
 
   const [returnBike, { isLoading: isReturningBike, error: returnError }] =
     useReturnBikeMutation();
@@ -35,6 +26,7 @@ const ReturnBike: React.FC = () => {
       console.log("All Rentals data:", rentalsData.data);
     }
     if (isFetchError) {
+      console.log(returnBike);
       console.error("Error fetching rentals:", fetchError);
     }
   }, [rentalsData, isFetchError, fetchError]);

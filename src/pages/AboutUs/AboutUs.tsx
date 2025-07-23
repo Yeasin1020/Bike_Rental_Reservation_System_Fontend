@@ -1,4 +1,3 @@
-import React from "react";
 import MissionStatement from "../../components/aboutUsPageAllComponent/MissionStatement";
 import TeamSection from "../../components/aboutUsPageAllComponent/TeamSection";
 import HistoryAndMilestones from "../../components/aboutUsPageAllComponent/HistoryAndMilestones";

@@ -1,55 +1,56 @@
-import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { setUser } from "../../redux/features/auth/authSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { verifyToken } from "../../utils/varifyToken";
-import { toast, ToastContainer } from "react-toastify"; // Import toastify
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { isFetchBaseQueryError } from "../../utils/errorUtils";
 
-// Define types for form data
 interface ILoginFormInput {
   email: string;
   password: string;
 }
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  profilePicture?: string;
+}
+
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ILoginFormInput>();
+
   const [login, { error, isLoading }] = useLoginMutation();
 
-  // Handle form submission
   const onSubmit: SubmitHandler<ILoginFormInput> = async (data) => {
-    const userInfo = {
-      email: data.email,
-      password: data.password,
-    };
-
     try {
-      const response = await login(userInfo).unwrap();
+      const response = await login({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
 
-      // Ensure the token is a string before decoding
       const token = response.token;
-      console.log("Token received:", token);
 
       if (typeof token !== "string") {
         throw new Error("Invalid token received");
       }
 
-      const user = verifyToken(token); // Decode the token safely
+      const user = verifyToken(token) as User;
+
       dispatch(setUser({ user, token }));
 
-      console.log("User set in Redux:", user);
-
-      // Show a success toast notification
       toast.success("Login successful!");
 
-      // Redirect based on role
       if (user.role === "admin") {
         navigate("/adminDashboard");
       } else if (user.role === "user") {
@@ -57,11 +58,8 @@ const LoginForm: React.FC = () => {
       } else {
         toast.error("Invalid role. Contact support.");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      console.error("Login failed:", err);
-
-      // Show an error toast notification
+    } catch (err) {
+      console.error("Login error:", err);
       toast.error("Login failed. Please try again.");
     }
   };
@@ -73,9 +71,10 @@ const LoginForm: React.FC = () => {
           Login to Your Account
         </h2>
 
-        {error && (
+        {isFetchBaseQueryError(error) && (
           <div className="p-2 text-sm text-red-600 bg-red-100 rounded">
-            {error?.data?.message || "Something went wrong!"}
+            {(error.data as { message?: string })?.message ||
+              "Something went wrong!"}
           </div>
         )}
 

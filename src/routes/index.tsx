@@ -1,4 +1,3 @@
-import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayouts from "../components/layouts/MainLayouts";
 import Home from "../pages/Home/Home";

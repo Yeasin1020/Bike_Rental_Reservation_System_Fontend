@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   useCreateBikeMutation,
   useDeleteBikeMutation,
@@ -8,17 +8,42 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Bike data type expected in the form (with _id as string)
+type TBikeData = {
+  _id?: string;
+  name: string;
+  description: string;
+  pricePerHour: string;
+  cc: string;
+  year: string;
+  model: string;
+  brand: string;
+};
+
+// Helper to convert MongoDB Bike type to TBikeData with string _id
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapBikeToBikeData = (bike: any): TBikeData => ({
+  _id: bike._id?.$oid ?? undefined,
+  name: bike.name,
+  description: bike.description,
+  pricePerHour: String(bike.pricePerHour),
+  cc: String(bike.cc),
+  year: String(bike.year),
+  model: bike.model,
+  brand: bike.brand,
+});
+
 const BikeManagement: React.FC = () => {
-  const { data, isLoading, isError, refetch } = useGetBikesQuery(); // Added refetch here
-  const bikes = data?.data || [];
-  console.log("Fetched bikes:", bikes); // Debugging to ensure bikes are available
+  const { data, isLoading, isError, refetch } = useGetBikesQuery();
+  // Transform bikes for UI use:
+  const bikes: TBikeData[] = (data?.data ?? []).map(mapBikeToBikeData);
 
   const [createBike] = useCreateBikeMutation();
   const [updateBike] = useUpdateBikeMutation();
   const [deleteBike] = useDeleteBikeMutation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [bikeData, setBikeData] = useState({
+  const [bikeData, setBikeData] = useState<TBikeData>({
     name: "",
     description: "",
     pricePerHour: "",
@@ -28,8 +53,7 @@ const BikeManagement: React.FC = () => {
     brand: "",
   });
 
-  // Open Modal for Create/Edit
-  const handleOpenModal = (bike?: typeof bikeData) => {
+  const handleOpenModal = (bike?: TBikeData) => {
     if (bike) {
       setBikeData(bike);
     } else {
@@ -46,25 +70,21 @@ const BikeManagement: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  // Close Modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  // Submit Data
   const handleSubmit = async () => {
     if (bikeData.name) {
       try {
         if (bikeData._id) {
-          // Update bike
           await updateBike({ id: bikeData._id, bikeData });
           toast.success("Bike updated successfully!");
         } else {
-          // Create bike
           await createBike(bikeData);
           toast.success("Bike added successfully!");
         }
-        refetch(); // Refetch the bikes after successful create/update
+        refetch();
       } catch (error) {
         toast.error("Error occurred while saving bike!");
       }
@@ -72,12 +92,11 @@ const BikeManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  // Delete bike
   const handleDelete = async (id: string) => {
     try {
       await deleteBike(id);
       toast.success("Bike deleted successfully!");
-      refetch(); // Refetch after deleting
+      refetch();
     } catch (error) {
       toast.error("Error occurred while deleting bike!");
     }
@@ -85,7 +104,6 @@ const BikeManagement: React.FC = () => {
 
   return (
     <div className="p-6">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Bike Management</h1>
         <button
@@ -96,7 +114,6 @@ const BikeManagement: React.FC = () => {
         </button>
       </div>
 
-      {/* Bike List */}
       {isLoading ? (
         <p>Loading...</p>
       ) : isError ? (
@@ -104,7 +121,7 @@ const BikeManagement: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {bikes.length === 0 ? (
-            <p>No bikes available.</p> // Show message if no bikes are available
+            <p>No bikes available.</p>
           ) : (
             bikes.map((bike) => (
               <div
@@ -134,7 +151,7 @@ const BikeManagement: React.FC = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(bike._id)}
+                    onClick={() => handleDelete(bike._id!)}
                     className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all"
                   >
                     Delete
@@ -146,14 +163,13 @@ const BikeManagement: React.FC = () => {
         </div>
       )}
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               {bikeData._id ? "Edit Bike" : "Add New Bike"}
             </h2>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="text"
                 value={bikeData.name}

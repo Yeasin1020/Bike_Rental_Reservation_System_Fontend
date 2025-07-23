@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 interface Bike {
@@ -28,7 +28,9 @@ const BikeList: React.FC = () => {
   useEffect(() => {
     const fetchBikes = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/bikes");
+        const res = await axios.get(
+          "https://bike-rental-reservation-system-backend-gamma.vercel.app/api/bikes"
+        );
         setBikes(res.data.data);
         setFilteredBikes(res.data.data);
       } catch (err) {

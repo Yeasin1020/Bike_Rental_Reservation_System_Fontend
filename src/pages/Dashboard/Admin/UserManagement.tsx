@@ -2,28 +2,48 @@ import React from "react";
 import {
   useDeleteUserMutation,
   useGetUsersQuery,
-  useUpdateProfileMutation,
+  useUpdateUserToAdminMutation,
 } from "../../../redux/api/userManagementApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Define User type locally for UI usage
 interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
-  role: "user" | "admin";
+  role: string;
+  id: string; // mapped from _id for convenience
+}
+
+// Helper to safely get error message from RTK Query errors
+function getErrorMessage(error: unknown): string {
+  if (typeof error === "object" && error !== null) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ("data" in error && typeof (error as any).data === "object") {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return ((error as any).data?.message as string) || "Unknown error";
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ("message" in error && typeof (error as any).message === "string") {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (error as any).message;
+    }
+  }
+  return "Unknown error";
 }
 
 const UserManagement: React.FC = () => {
-  const { data, isLoading, isError, refetch } = useGetUsersQuery();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const users = (data?.data || []).map((user: any) => ({
+  const { data, isLoading, isError, refetch, error } = useGetUsersQuery();
+
+  // Map _id to id for UI usage
+  const users: User[] = (data?.data || []).map((user) => ({
     ...user,
-    id: user._id, // Map _id to id
+    id: user._id,
   }));
 
   const [deleteUser] = useDeleteUserMutation();
-  const [updateProfile] = useUpdateProfileMutation();
+  const [updateUserToAdmin] = useUpdateUserToAdminMutation();
 
   const handleDeleteUser = async (userId: string | undefined) => {
     if (!userId) {
@@ -34,10 +54,8 @@ const UserManagement: React.FC = () => {
       await deleteUser(userId).unwrap();
       toast.success("User deleted successfully!");
       refetch();
-    } catch (error) {
-      toast.error(
-        `Failed to delete user: ${error?.data?.message || error.message}`
-      );
+    } catch (err) {
+      toast.error(`Failed to delete user: ${getErrorMessage(err)}`);
     }
   };
 
@@ -47,26 +65,21 @@ const UserManagement: React.FC = () => {
       return;
     }
     try {
-      await updateProfile({ id: userId, userData: { role: "admin" } }).unwrap();
+      await updateUserToAdmin(userId).unwrap();
       toast.success("User promoted to admin successfully!");
       refetch();
-    } catch (error) {
-      toast.error(
-        `Failed to promote user: ${error?.data?.message || error.message}`
-      );
+    } catch (err) {
+      toast.error(`Failed to promote user: ${getErrorMessage(err)}`);
     }
   };
+
   if (isLoading) return <div className="p-6">Loading users...</div>;
 
-  if (isError) {
-    const errorMessage =
-      error?.data?.message || "An error occurred while fetching users.";
-    return <div className="p-6 text-red-500">{errorMessage}</div>;
-  }
+  if (isError)
+    return <div className="p-6 text-red-500">{getErrorMessage(error)}</div>;
 
-  if (!users.length) {
+  if (!users.length)
     return <div className="p-6 text-gray-600">No users found.</div>;
-  }
 
   return (
     <div className="p-6">
@@ -77,7 +90,7 @@ const UserManagement: React.FC = () => {
 
       {/* User List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {users.map((user: User) => (
+        {users.map((user) => (
           <div
             key={user.id}
             className="bg-white shadow-md rounded-lg p-4 border hover:shadow-lg transition-shadow"

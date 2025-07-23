@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Bike } from "../../utils/type/bike";
 
-interface BikesApiResponse {
+export interface BikesApiResponse {
 	success: boolean;
 	statusCode: number;
 	message: string;
@@ -11,7 +11,7 @@ interface BikesApiResponse {
 export const bikeApi = createApi({
 	reducerPath: "bikeApi",
 	baseQuery: fetchBaseQuery({
-		baseUrl: "http://localhost:5000/api",
+		baseUrl: "https://bike-rental-reservation-system-backend-gamma.vercel.app/api",
 		prepareHeaders: (headers, { getState }) => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const token = (getState() as any).auth.token;
