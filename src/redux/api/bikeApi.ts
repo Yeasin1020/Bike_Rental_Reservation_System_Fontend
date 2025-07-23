@@ -8,6 +8,13 @@ export interface BikesApiResponse {
 	data: Bike[];
 }
 
+export interface SingleBikeApiResponse {
+	success: boolean;
+	statusCode: number;
+	message: string;
+	data: Bike;
+}
+
 export const bikeApi = createApi({
 	reducerPath: "bikeApi",
 	baseQuery: fetchBaseQuery({
@@ -22,9 +29,17 @@ export const bikeApi = createApi({
 		},
 	}),
 	endpoints: (builder) => ({
+		// ✅ Get all bikes
 		getBikes: builder.query<BikesApiResponse, void>({
 			query: () => "/bikes",
 		}),
+
+		// ✅ Get single bike by ID
+		getBikeById: builder.query<SingleBikeApiResponse, string>({
+			query: (id) => `/bikes/${id}`,
+		}),
+
+		// ✅ Create
 		createBike: builder.mutation({
 			query: (bikeData) => ({
 				url: "/bikes",
@@ -32,6 +47,8 @@ export const bikeApi = createApi({
 				body: bikeData,
 			}),
 		}),
+
+		// ✅ Update
 		updateBike: builder.mutation({
 			query: ({ id, bikeData }) => ({
 				url: `/bikes/${id}`,
@@ -39,6 +56,8 @@ export const bikeApi = createApi({
 				body: bikeData,
 			}),
 		}),
+
+		// ✅ Delete
 		deleteBike: builder.mutation({
 			query: (id) => ({
 				url: `/bikes/${id}`,
@@ -48,8 +67,10 @@ export const bikeApi = createApi({
 	}),
 });
 
+// ✅ Export hooks
 export const {
 	useGetBikesQuery,
+	useGetBikeByIdQuery, // 🔥 newly added
 	useCreateBikeMutation,
 	useUpdateBikeMutation,
 	useDeleteBikeMutation,

@@ -1,101 +1,103 @@
 import { useParams } from "react-router-dom";
-
-// Sample data for bikes
-const bikes = [
-  {
-    id: 1,
-    brand: "Trek FX 3",
-    model: "2021",
-    description: "A great bike for city rides",
-    price: "100",
-    cc: "100cc",
-    available: true,
-    image: "/images/bike1.jpg",
-  },
-  {
-    id: 2,
-    brand: "Cannondale Quick",
-    model: "2020",
-    description: "A fast bike for professional riders",
-    price: "120",
-    cc: "200cc",
-    available: false,
-    image: "/images/bike2.jpg",
-  },
-  {
-    id: 3,
-    brand: "Specialized Sirrus",
-    model: "2022",
-    description: "A reliable bike for commuting",
-    price: "130",
-    cc: "150cc",
-    available: true,
-    image: "/images/bike3.jpg",
-  },
-  {
-    id: 4,
-    brand: "Giant Escape 3",
-    model: "2019",
-    description: "An excellent bike for all terrains",
-    price: "90",
-    cc: "100cc",
-    available: true,
-    image: "/images/bike4.jpg",
-  },
-];
+import { useGetBikeByIdQuery } from "../../redux/api/bikeApi";
+import { Bike } from "../../utils/type/bike";
+import { useEffect } from "react";
 
 const BikeDetails = () => {
-  const { id } = useParams();
-  const bikeId = Number(id); // Convert the ID to number
+  const { id } = useParams<{ id: string }>();
+  const { data, isLoading, isError } = useGetBikeByIdQuery(id ?? "");
+  // ✅ Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+  if (isLoading)
+    return <div className="text-center py-10">Loading bike details...</div>;
 
-  // Find the bike from the list using the bike ID
-  const bike = bikes.find((bike) => bike.id === bikeId);
-
-  if (!bike) {
-    // Show "Bike not found" if no bike is found
+  if (isError || !data?.data)
     return (
-      <div className="text-center py-16">
-        <h1 className="text-2xl font-bold text-red-600">Bike not found</h1>
+      <div className="text-center py-10 text-red-500">
+        Failed to load bike details.
       </div>
     );
-  }
+
+  const bike: Bike = data.data;
 
   return (
-    <div className="py-16 px-4 bg-gray-50">
-      {/* Bike Card */}
-      <div className="max-w-screen-xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="flex flex-col lg:flex-row">
-          {/* Bike Image */}
-          <div className="lg:w-1/2">
+    <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-md mt-8">
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Image Section */}
+        <div className="lg:w-1/2 w-full">
+          <div className="w-full aspect-video rounded-lg overflow-hidden shadow-md">
             <img
-              src={bike.image}
-              alt={bike.brand}
-              className="w-full h-96 object-cover"
+              src={bike.imageUrls?.[0]}
+              alt={bike.name}
+              className="w-full h-full object-cover"
             />
           </div>
 
-          {/* Bike Info */}
-          <div className="lg:w-1/2 p-8">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-4">
-              {bike.brand} {bike.model}
-            </h2>
-            <p className="text-lg text-gray-700 mb-4">{bike.description}</p>
-            <p className="text-lg text-gray-800 mb-4">
-              <span className="font-semibold">Price:</span> ${bike.price}
-            </p>
-            <p className="text-lg text-gray-800 mb-4">
-              <span className="font-semibold">CC:</span> {bike.cc}
-            </p>
-            <p className="text-lg text-gray-800 mb-4">
-              <span className="font-semibold">Availability:</span>{" "}
-              {bike.available ? "Available" : "Unavailable"}
-            </p>
+          {bike.imageUrls?.length > 1 && (
+            <div className="mt-3 flex gap-2 overflow-x-auto">
+              {bike.imageUrls.slice(1).map((url, i) => (
+                <img
+                  key={i}
+                  src={url}
+                  alt={`Image ${i + 2}`}
+                  className="w-24 h-16 object-cover rounded border"
+                />
+              ))}
+            </div>
+          )}
+        </div>
 
-            {/* Book Now Button */}
-            <button className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200">
-              Book Now
-            </button>
+        {/* Details Section */}
+        <div className="lg:w-1/2 w-full space-y-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+            {bike.name}
+          </h2>
+          <p className="text-gray-600 text-sm">{bike.description}</p>
+
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+            <Detail label="Price/hr" value={`${bike.pricePerHour} Tk`} />
+            <Detail label="Available" value={bike.isAvailable ? "Yes" : "No"} />
+            <Detail label="Brand" value={bike.brand} />
+            <Detail label="Model" value={bike.model} />
+            <Detail label="Year" value={bike.year} />
+            <Detail label="Engine CC" value={bike.cc || "N/A"} />
+            <Detail label="Fuel Type" value={bike.fuelType} />
+            <Detail label="Color" value={bike.color || "N/A"} />
+            <Detail label="Transmission" value={bike.transmission} />
+            <Detail label="Top Speed" value={`${bike.topSpeed} km/h`} />
+            <Detail label="Mileage" value={`${bike.mileage} km`} />
+            <Detail
+              label="Location"
+              value={`${bike.location?.area}, ${bike.location?.city}`}
+            />
           </div>
+
+          {/* Rating */}
+          <div className="flex items-center gap-2 text-sm mt-1">
+            <span className="text-yellow-500 text-base">★</span>
+            <span className="text-gray-700">
+              {bike.averageRating} / 5.0 ({bike.totalRatings} ratings)
+            </span>
+          </div>
+
+          {/* Features */}
+          {bike.features?.length > 0 && (
+            <div>
+              <h3 className="font-semibold mb-1">Features</h3>
+              <div className="flex flex-wrap gap-2">
+                {bike.features.map((feature, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full"
+                  >
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -103,3 +105,16 @@ const BikeDetails = () => {
 };
 
 export default BikeDetails;
+
+// Utility Component
+const Detail = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number;
+}) => (
+  <p>
+    <span className="font-medium">{label}:</span> {value}
+  </p>
+);

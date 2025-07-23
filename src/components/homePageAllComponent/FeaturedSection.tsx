@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useGetBikesQuery } from "../../redux/api/bikeApi";
 import { Bike } from "../../utils/type/bike";
+import { Link } from "react-router-dom";
 
 const FeaturedSection: React.FC = () => {
   const { data, error, isLoading } = useGetBikesQuery(undefined, {
@@ -85,11 +86,13 @@ const FeaturedSection: React.FC = () => {
                   >
                     {bike.isAvailable ? "Available" : "Not Available"}
                   </p>
-                  <button
-                    onClick={() => alert(`Details of ${bike.name}`)}
-                    className="mt-3 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm w-full"
-                  >
-                    View Details
+                  <button className="mt-3 w-full">
+                    <Link
+                      to={`/bike-detail/${bike._id}`}
+                      className="block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm text-center"
+                    >
+                      View Details
+                    </Link>
                   </button>
                 </div>
               </div>
