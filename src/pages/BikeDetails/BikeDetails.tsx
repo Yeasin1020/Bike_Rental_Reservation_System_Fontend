@@ -1,15 +1,20 @@
 import { useParams } from "react-router-dom";
 import { useGetBikeByIdQuery } from "../../redux/api/bikeApi";
 import { Bike } from "../../utils/type/bike";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast, Toaster } from "react-hot-toast"; // <-- You must have this RTK query
+import { useCreateRentalMutation } from "../../redux/api/bikeRentalApi";
 
 const BikeDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading, isError } = useGetBikeByIdQuery(id ?? "");
-  // ✅ Scroll to top when component mounts
+  const [createRental, { isLoading: isRenting }] = useCreateRentalMutation();
+  const [renting, setRenting] = useState(false);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
   if (isLoading)
     return <div className="text-center py-10">Loading bike details...</div>;
 
@@ -21,6 +26,21 @@ const BikeDetails = () => {
     );
 
   const bike: Bike = data.data;
+
+  const handleRent = async () => {
+    if (!bike._id) return;
+    setRenting(true);
+    try {
+      const startTime = new Date().toISOString();
+      await createRental({ bikeId: bike._id, startTime }).unwrap();
+      toast.success("Rental created successfully!");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to rent bike.");
+    } finally {
+      setRenting(false);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-md mt-8">
@@ -98,7 +118,19 @@ const BikeDetails = () => {
               </div>
             </div>
           )}
+
+          {/* Rent Button */}
+          {bike.isAvailable && (
+            <button
+              onClick={handleRent}
+              disabled={renting || isRenting}
+              className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition duration-200 disabled:opacity-50"
+            >
+              {renting ? "Processing..." : "Rent Now"}
+            </button>
+          )}
         </div>
+        <Toaster></Toaster>
       </div>
     </div>
   );

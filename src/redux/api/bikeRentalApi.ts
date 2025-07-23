@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const bikeReturnApi = createApi({
 	reducerPath: 'bikeReturnApi',
 	baseQuery: fetchBaseQuery({
-		baseUrl: 'http://localhost:5000/api',
+		baseUrl: 'https://bike-rental-reservation-system-backend-gamma.vercel.app/api',
 		prepareHeaders: (headers, { getState }) => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const token = (getState() as any).auth.token;
@@ -18,6 +18,14 @@ export const bikeReturnApi = createApi({
 		// Get rentals for a user
 		getRentals: builder.query({
 			query: () => '/rentals', // This fetches rentals for the logged-in user
+		}),
+		//create rental 
+		createRental: builder.mutation({
+			query: (rentalData) => ({
+				url: "/rentals",
+				method: "POST",
+				body: rentalData,
+			}),
 		}),
 		// Return a bike
 		returnBike: builder.mutation({
@@ -35,6 +43,7 @@ export const bikeReturnApi = createApi({
 
 export const {
 	useGetRentalsQuery,
+	useCreateRentalMutation,
 	useReturnBikeMutation,
 	useGetAllRentalsQuery, // Updated to use the correct endpoint
 } = bikeReturnApi;
