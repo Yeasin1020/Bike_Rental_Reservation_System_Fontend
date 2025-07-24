@@ -15,6 +15,7 @@ import ReturnBike from "../pages/Dashboard/Admin/ReturnBike";
 import UserProfilePage from "../pages/Dashboard/User/UserProfile";
 import PricingInfo from "../pages/PricingInfo/PricingInfo";
 import Contact from "../pages/Contact/Contact";
+import Services from "../pages/Services/Services";
 
 // AuthWrapper Component
 // eslint-disable-next-line react-refresh/only-export-components
@@ -47,6 +48,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "/about-us", element: <AboutUs /> },
       { path: "/bike-list", element: <BikeList /> },
+      { path: "/services", element: <Services></Services> },
       { path: "/pricing", element: <PricingInfo></PricingInfo> },
       { path: "/contact", element: <Contact></Contact> },
       { path: "/bike-details/:id", element: <BikeDetails /> },
