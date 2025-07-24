@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
+import TypewriterSearch from "../ui/TypewriterSearch";
 
 const HeroSection = () => {
   const [bgLoaded, setBgLoaded] = useState(false);
@@ -66,25 +67,18 @@ const HeroSection = () => {
           </p>
 
           {/* Search Bar */}
-          <div className="w-full max-w-xl">
-            <div className="flex items-center bg-white/90 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
-              <input
-                type="text"
-                placeholder="Search bike availability..."
-                className="w-full px-4 py-3 text-gray-700 focus:outline-none"
-              />
-              <button className="px-5 py-3 bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-colors duration-200">
-                Search
-              </button>
-            </div>
-          </div>
+          <TypewriterSearch></TypewriterSearch>
 
           {/* CTA Button */}
           <Link
             to="/bike-list"
-            className="inline-block mt-4 px-6 py-3 bg-green-600 text-white text-lg font-medium rounded-lg hover:bg-green-500 transition-all duration-200 shadow-lg"
+            className="relative inline-block mt-4 px-6 py-3 text-white text-lg font-semibold rounded-lg
+            bg-[#3B82F6] shadow-md overflow-hidden transition-all duration-300 
+            hover:scale-105 hover:shadow-blue-500/50 focus:outline-none focus:ring-4 focus:ring-blue-300
+            animate-pulse-soft group"
           >
-            View All Bikes
+            <span className="absolute inset-0 bg-blue-400 opacity-20 blur-2xl rounded-full group-hover:opacity-30 transition-all duration-300"></span>
+            <span className="relative z-10">🚴 View All Bikes</span>
           </Link>
         </div>
       </div>
