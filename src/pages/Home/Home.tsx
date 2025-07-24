@@ -26,16 +26,7 @@ const Home = () => {
       >
         <HeroSection />
       </motion.div>
-
-      <motion.div
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        style={{ marginTop: "3rem" }}
-      >
-        <FeaturedSection />
-      </motion.div>
+      <FeaturedSection />
 
       <motion.div
         variants={sectionVariants}

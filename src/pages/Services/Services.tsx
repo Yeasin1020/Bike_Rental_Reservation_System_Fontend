@@ -47,7 +47,7 @@ const Services = () => {
     window.scrollTo(0, 0);
   }, []);
   return (
-    <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-20">
+    <section className=" py-16 px-4 sm:px-6 lg:px-20">
       {/* Header */}
       <div className="text-center mb-14 max-w-2xl mx-auto px-2">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 leading-tight">
@@ -64,7 +64,7 @@ const Services = () => {
         {services.map((service, i) => (
           <div
             key={i}
-            className="bg-white shadow-md hover:shadow-xl rounded-2xl p-6 flex flex-col items-start space-y-3 transition duration-300"
+            className=" shadow-md hover:shadow-xl rounded-2xl p-6 flex flex-col items-start space-y-3 transition duration-300"
           >
             <div className="p-3 bg-blue-100 rounded-full">{service.icon}</div>
             <h3 className="text-xl font-semibold text-gray-800">

@@ -23,7 +23,7 @@ const ContactUs = () => {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen flex items-center">
+    <section className="py-16  from-blue-50 to-blue-100 min-h-screen flex items-center">
       <Toaster
         position="top-center"
         toastOptions={{
@@ -51,7 +51,7 @@ const ContactUs = () => {
 
         {/* Form */}
         <form
-          className="bg-white shadow-xl rounded-xl p-8 sm:p-10"
+          className=" shadow-xl rounded-xl p-8 sm:p-10"
           onSubmit={handleSubmit}
         >
           <div className="space-y-6">

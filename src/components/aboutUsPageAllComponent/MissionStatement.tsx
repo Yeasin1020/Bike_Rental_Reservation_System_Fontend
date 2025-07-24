@@ -1,6 +1,6 @@
 const MissionStatement = () => {
   return (
-    <div className="bg-gradient-to-r from-blue-100 to-blue-50 py-16 px-6 md:px-12">
+    <div className=" from-blue-100 to-blue-50 py-16 px-6 md:px-12">
       <div className="max-w-screen-xl mx-auto text-center space-y-8">
         {/* Heading */}
         <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-800">

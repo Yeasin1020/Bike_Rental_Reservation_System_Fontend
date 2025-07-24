@@ -15,7 +15,7 @@ const PricingInfo = () => {
 
   return (
     <div className="min-h-screen">
-      <section className="max-w-3xl mx-auto my-10  px-4 py-10 bg-white rounded-xl shadow-md border border-gray-200">
+      <section className="max-w-3xl mx-auto my-10  px-4 py-10  rounded-xl shadow-md border border-gray-200">
         {/* Heading */}
         <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
           <TbCalculator className="text-blue-600 text-3xl" />

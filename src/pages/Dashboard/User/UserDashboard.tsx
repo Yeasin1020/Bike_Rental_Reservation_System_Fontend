@@ -112,7 +112,7 @@ const UserDashboard: React.FC = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 p-1 lg:p-8 bg-gray-100 overflow-y-auto">
+      <div className="flex-1 p-1 lg:p-8  overflow-y-auto">
         <div className="md:hidden mb-4">
           <button
             onClick={toggleSidebar}

@@ -21,7 +21,7 @@ const TeamSection = () => {
   ];
 
   return (
-    <div className="bg-white py-16 px-6 md:px-12">
+    <div className=" py-16 px-6 md:px-12">
       <div className="max-w-screen-xl mx-auto text-center space-y-12">
         {/* Heading */}
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">

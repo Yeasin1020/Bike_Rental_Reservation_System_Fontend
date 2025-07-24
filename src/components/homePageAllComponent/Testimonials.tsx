@@ -48,7 +48,7 @@ const cardVariants = {
 
 const Testimonials = () => {
   return (
-    <div className="py-20 bg-gradient-to-r from-blue-100 to-blue-50">
+    <div className="py-20  ">
       <div className="max-w-screen-xl mx-auto px-4">
         {/* Heading */}
         <motion.h2
@@ -82,7 +82,7 @@ const Testimonials = () => {
           {testimonials.map((testimonial) => (
             <motion.div
               key={testimonial.id}
-              className="bg-white border border-gray-200 rounded-2xl shadow-md p-6 text-center hover:shadow-xl transition-shadow duration-300"
+              className=" border border-gray-200 rounded-2xl shadow-md p-6 text-center hover:shadow-xl transition-shadow duration-300"
               variants={cardVariants}
               whileHover={{ scale: 1.03 }}
             >

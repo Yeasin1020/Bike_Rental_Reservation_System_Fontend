@@ -43,7 +43,7 @@ const BikeDetails = () => {
   };
 
   return (
-    <div className="min-h-screen max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-md mt-8">
+    <div className="min-h-screen max-w-6xl mx-auto p-4 md:p-6  rounded-lg shadow-md mt-8">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Image Section */}
         <div className="lg:w-1/2 w-full">

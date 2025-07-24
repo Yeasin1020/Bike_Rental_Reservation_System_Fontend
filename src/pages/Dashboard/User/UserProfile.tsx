@@ -128,7 +128,7 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="bg-white shadow-xl rounded-xl p-8 transition-all duration-300">
+      <div className=" shadow-xl rounded-xl p-8 transition-all duration-300">
         <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">
           My Profile
         </h2>

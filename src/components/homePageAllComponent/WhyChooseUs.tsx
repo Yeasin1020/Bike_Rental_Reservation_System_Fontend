@@ -48,7 +48,7 @@ const cardVariants = {
 
 const WhyChooseUs = () => {
   return (
-    <div className="py-20 bg-white">
+    <div className="py-20">
       <div className="max-w-screen-xl mx-auto px-4">
         {/* Heading */}
         <motion.h2
@@ -83,7 +83,7 @@ const WhyChooseUs = () => {
           {benefits.map((benefit) => (
             <motion.div
               key={benefit.id}
-              className="flex flex-col items-center text-center bg-gray-50 border border-gray-200 rounded-2xl shadow-md p-6 hover:shadow-xl transition duration-300"
+              className="flex flex-col items-center text-center  border border-gray-200 rounded-2xl shadow-md p-6 hover:shadow-xl transition duration-300"
               variants={cardVariants}
               whileHover={{ scale: 1.03 }}
             >
