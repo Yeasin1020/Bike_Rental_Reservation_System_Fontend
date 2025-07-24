@@ -68,15 +68,6 @@ const NavBar: React.FC = () => {
               >
                 Logout
               </button>
-              <Link
-                to="/profile"
-                className="text-white hover:text-blue-400 transition-all duration-300"
-              >
-                <FaUserCircle
-                  size={26}
-                  className="hover:scale-110 duration-300"
-                />
-              </Link>
             </>
           ) : (
             <>
