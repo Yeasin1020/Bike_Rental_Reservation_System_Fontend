@@ -1,21 +1,58 @@
+import React, { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+
 const ContactUs = () => {
+  const [isSending, setIsSending] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSending(true);
+
+    // Store form reference before async call
+    const form = e.currentTarget;
+
+    // Simulate async message sending (e.g., API call)
+    setTimeout(() => {
+      setIsSending(false);
+      toast.success("Thank you for contacting us! We'll get back to you soon.");
+      form.reset();
+    }, 2000);
+  };
+
   return (
-    <div className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
-      <div className="max-w-screen-lg mx-auto px-6">
+    <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen flex items-center">
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+            fontWeight: "600",
+            fontSize: "16px",
+            padding: "16px",
+            textAlign: "center",
+          },
+        }}
+      />
+      <div className="max-w-3xl mx-auto px-6 w-full">
         {/* Heading */}
-        <div className="text-center">
-          <h2 className="text-4xl font-bold text-gray-800 sm:text-5xl">
+        <header className="text-center max-w-md mx-auto mb-10">
+          <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
             Get in Touch
           </h2>
-          <p className="mt-4 text-lg text-gray-600">
+          <p className="mt-4 text-lg text-gray-700">
             Have questions or need assistance? We're here to help!
           </p>
-        </div>
+        </header>
 
         {/* Form */}
-        <div className="mt-10 bg-white shadow-lg rounded-xl p-8 lg:p-12">
-          <form className="space-y-6">
-            {/* Name Field */}
+        <form
+          className="bg-white shadow-xl rounded-xl p-8 sm:p-10"
+          onSubmit={handleSubmit}
+        >
+          <div className="space-y-6">
+            {/* Name */}
             <div>
               <label
                 htmlFor="name"
@@ -28,12 +65,13 @@ const ContactUs = () => {
                 id="name"
                 name="name"
                 placeholder="Enter your name"
-                className="mt-2 w-full px-4 py-3 text-gray-800 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none sm:text-sm"
                 required
+                disabled={isSending}
+                className="mt-2 w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-sm placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none sm:text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
-            {/* Email Field */}
+            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -46,12 +84,13 @@ const ContactUs = () => {
                 id="email"
                 name="email"
                 placeholder="Enter your email"
-                className="mt-2 w-full px-4 py-3 text-gray-800 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none sm:text-sm"
                 required
+                disabled={isSending}
+                className="mt-2 w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-sm placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none sm:text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
-            {/* Message Field */}
+            {/* Message */}
             <div>
               <label
                 htmlFor="message"
@@ -62,10 +101,11 @@ const ContactUs = () => {
               <textarea
                 id="message"
                 name="message"
-                rows={6}
+                rows={5}
                 placeholder="Write your message here"
-                className="mt-2 w-full px-4 py-3 text-gray-800 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none sm:text-sm"
                 required
+                disabled={isSending}
+                className="mt-2 w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-sm placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none sm:text-sm resize-y transition disabled:opacity-50 disabled:cursor-not-allowed"
               ></textarea>
             </div>
 
@@ -73,26 +113,53 @@ const ContactUs = () => {
             <div className="text-center">
               <button
                 type="submit"
-                className="inline-flex items-center px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none transition duration-300"
+                disabled={isSending}
+                className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-lg font-semibold text-white shadow-md hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Message
+                {isSending ? (
+                  <>
+                    <svg
+                      className="animate-spin mr-2 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      ></path>
+                    </svg>
+                    Sending...
+                  </>
+                ) : (
+                  "Send Message"
+                )}
               </button>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
 
         {/* Contact Info */}
-        <div className="mt-12 text-center text-gray-600">
+        <div className="mt-12 text-center text-gray-700">
           <p>Or reach us directly at:</p>
           <a
             href="mailto:support@example.com"
-            className="text-blue-600 font-medium hover:underline"
+            className="mt-2 inline-block text-blue-600 font-medium hover:underline"
           >
-            support@example.com
+            support@bikerental.com
           </a>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

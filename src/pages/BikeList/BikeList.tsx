@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Loading from "../../components/ui/Loading";
 
 interface Bike {
   _id: string;
@@ -25,9 +26,11 @@ const BikeList: React.FC = () => {
   const [filterBrand, setFilterBrand] = useState("");
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const [visibleCount, setVisibleCount] = useState(6);
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const fetchBikes = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(
           "https://bike-rental-reservation-system-backend-gamma.vercel.app/api/bikes"
@@ -36,6 +39,8 @@ const BikeList: React.FC = () => {
         setFilteredBikes(res.data.data);
       } catch (err) {
         console.error("Failed to fetch bikes:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchBikes();
@@ -69,6 +74,8 @@ const BikeList: React.FC = () => {
   const handleSeeMore = () => {
     setVisibleCount((prev) => prev + 6);
   };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-screen-2xl mx-auto">

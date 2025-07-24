@@ -4,6 +4,7 @@ import { Bike } from "../../utils/type/bike";
 import { useEffect, useState } from "react";
 import { toast, Toaster } from "react-hot-toast"; // <-- You must have this RTK query
 import { useCreateRentalMutation } from "../../redux/api/bikeRentalApi";
+import Loading from "../../components/ui/Loading";
 
 const BikeDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,8 +16,7 @@ const BikeDetails = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  if (isLoading)
-    return <div className="text-center py-10">Loading bike details...</div>;
+  if (isLoading) return <Loading></Loading>;
 
   if (isError || !data?.data)
     return (
@@ -43,7 +43,7 @@ const BikeDetails = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-md mt-8">
+    <div className="min-h-screen max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-md mt-8">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Image Section */}
         <div className="lg:w-1/2 w-full">

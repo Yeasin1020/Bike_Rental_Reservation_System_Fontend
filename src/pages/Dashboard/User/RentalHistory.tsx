@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { useGetRentalsQuery } from "../../../redux/api/bikeRentalApi";
 import { MdAccessTime, MdLocationOn } from "react-icons/md";
 import { BsCurrencyDollar } from "react-icons/bs";
+import Loading from "../../../components/ui/Loading";
 
 interface Rental {
   _id: string;
@@ -41,10 +42,7 @@ const RentalHistory: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (isLoading)
-    return (
-      <div className="text-center py-10 text-gray-500">Loading rentals...</div>
-    );
+  if (isLoading) return <Loading></Loading>;
 
   if (error)
     return (

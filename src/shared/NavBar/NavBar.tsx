@@ -8,99 +8,87 @@ import { logout } from "../../redux/features/auth/authSlice";
 const NavBar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const dispatch: AppDispatch = useDispatch();
+  const { user, token } = useSelector((state: RootState) => state.auth);
 
-  const { user, token } = useSelector((state: RootState) => state.auth); // Get auth state
-
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const handleLogout = () => {
     dispatch(logout());
-    setMenuOpen(false); // Close mobile menu on logout
+    setMenuOpen(false);
   };
 
+  const commonLinkStyle =
+    "hover:text-blue-400 transition duration-300 ease-in-out";
+
+  const buttonStyle =
+    "px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105";
+
   return (
-    <nav className="bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white shadow-lg">
+    <nav className="bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white shadow-md z-50 sticky top-0">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-3">
-          <span className="text-2xl font-bold">BikeRental</span>
+        <Link to="/" className="text-2xl font-bold tracking-wide">
+          BikeRental
         </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
-          <Link
-            to="/"
-            className="hover:text-blue-400 transition-colors duration-200"
-          >
+          <Link to="/" className={commonLinkStyle}>
             Home
           </Link>
-          <Link
-            to="/about-us"
-            className="hover:text-blue-400 transition-colors duration-200"
-          >
+          <Link to="/about-us" className={commonLinkStyle}>
             About Us
           </Link>
-          <Link
-            to="/bike-list"
-            className="hover:text-blue-400 transition-colors duration-200"
-          >
+          <Link to="/bike-list" className={commonLinkStyle}>
             Bike List
           </Link>
-          <Link
-            to="/services"
-            className="hover:text-blue-400 transition-colors duration-200"
-          >
+          <Link to="/services" className={commonLinkStyle}>
             Services
           </Link>
-          <Link
-            to="/pricing"
-            className="hover:text-blue-400 transition-colors duration-200"
-          >
+          <Link to="/pricing" className={commonLinkStyle}>
             Pricing
           </Link>
-          <Link
-            to="/contact"
-            className="hover:text-blue-400 transition-colors duration-200"
-          >
+          <Link to="/contact" className={commonLinkStyle}>
             Contact
           </Link>
 
-          {/* Conditional Links */}
           {token ? (
             <>
               <Link
                 to={`/${
                   user?.role === "admin" ? "adminDashboard" : "userDashboard"
                 }`}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
+                className={`${buttonStyle} bg-blue-600 hover:bg-blue-500`}
               >
                 Dashboard
               </Link>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
+                className={`${buttonStyle} bg-red-600 hover:bg-red-500`}
               >
                 Logout
               </button>
-              {/* Profile Icon */}
               <Link
                 to="/profile"
-                className="text-white hover:text-blue-400 transition-colors duration-200"
+                className="text-white hover:text-blue-400 transition-all duration-300"
               >
-                <FaUserCircle size={24} />
+                <FaUserCircle
+                  size={26}
+                  className="hover:scale-110 duration-300"
+                />
               </Link>
             </>
           ) : (
             <>
               <Link
                 to="/login"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
+                className={`${buttonStyle} bg-blue-600 hover:bg-blue-500`}
               >
                 Login
               </Link>
               <Link
                 to="/signUp"
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500"
+                className={`${buttonStyle} bg-green-600 hover:bg-green-500`}
               >
                 Sign Up
               </Link>
@@ -108,86 +96,72 @@ const NavBar: React.FC = () => {
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Toggle */}
         <button
           onClick={toggleMenu}
-          className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 transition-transform duration-200"
         >
-          {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+          {menuOpen ? (
+            <FaTimes
+              size={22}
+              className="text-white hover:scale-110 duration-300"
+            />
+          ) : (
+            <FaBars
+              size={22}
+              className="text-white hover:scale-110 duration-300"
+            />
+          )}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden bg-gray-900 text-white">
-          <div className="px-6 py-4 space-y-4">
-            <Link
-              to="/"
-              className="block hover:text-blue-400 transition-colors duration-200"
-              onClick={toggleMenu}
-            >
-              Home
-            </Link>
-            <Link
-              to="/about-us"
-              className="block hover:text-blue-400 transition-colors duration-200"
-              onClick={toggleMenu}
-            >
-              About Us
-            </Link>
-            <Link
-              to="/bike-list"
-              className="block hover:text-blue-400 transition-colors duration-200"
-              onClick={toggleMenu}
-            >
-              Bike List
-            </Link>
-            <Link
-              to="/services"
-              className="block hover:text-blue-400 transition-colors duration-200"
-              onClick={toggleMenu}
-            >
-              Services
-            </Link>
-            <Link
-              to="/pricing"
-              className="block hover:text-blue-400 transition-colors duration-200"
-              onClick={toggleMenu}
-            >
-              Pricing
-            </Link>
-            <Link
-              to="/contact"
-              className="block hover:text-blue-400 transition-colors duration-200"
-              onClick={toggleMenu}
-            >
-              Contact
-            </Link>
+          <div className="px-6 py-4 space-y-4 flex flex-col">
+            {[
+              "/",
+              "/about-us",
+              "/bike-list",
+              "/services",
+              "/pricing",
+              "/contact",
+            ].map((path, i) => (
+              <Link
+                key={i}
+                to={path}
+                onClick={toggleMenu}
+                className="hover:text-blue-400 transition duration-300"
+              >
+                {path === "/"
+                  ? "Home"
+                  : path
+                      .replace("/", "")
+                      .replace("-", " ")
+                      .replace(/\b\w/g, (c) => c.toUpperCase())}
+              </Link>
+            ))}
 
-            {/* Conditional Links */}
             {token ? (
               <>
                 <Link
                   to={`/${
                     user?.role === "admin" ? "adminDashboard" : "userDashboard"
                   }`}
-                  className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
+                  className={`${buttonStyle} bg-blue-600 hover:bg-blue-500 w-full text-center`}
                   onClick={toggleMenu}
                 >
                   Dashboard
                 </Link>
                 <button
-                  onClick={() => {
-                    handleLogout();
-                    toggleMenu();
-                  }}
-                  className="block w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
+                  onClick={handleLogout}
+                  className={`${buttonStyle} bg-red-600 hover:bg-red-500 w-full`}
                 >
                   Logout
                 </button>
                 <Link
                   to="/profile"
-                  className="block text-white hover:text-blue-400 transition-colors duration-200"
+                  className="flex items-center gap-2 hover:text-blue-400 transition duration-300"
                   onClick={toggleMenu}
                 >
                   <FaUserCircle size={24} />
@@ -198,14 +172,14 @@ const NavBar: React.FC = () => {
               <>
                 <Link
                   to="/login"
-                  className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
+                  className={`${buttonStyle} bg-blue-600 hover:bg-blue-500 w-full text-center`}
                   onClick={toggleMenu}
                 >
                   Login
                 </Link>
                 <Link
                   to="/signUp"
-                  className="block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500"
+                  className={`${buttonStyle} bg-green-600 hover:bg-green-500 w-full text-center`}
                   onClick={toggleMenu}
                 >
                   Sign Up
