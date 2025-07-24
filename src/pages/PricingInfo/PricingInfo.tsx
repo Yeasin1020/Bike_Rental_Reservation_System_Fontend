@@ -1,10 +1,13 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { MdAccessTime } from "react-icons/md";
 import { TbCalculator } from "react-icons/tb";
 
 const PricingInfo = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [hourlyRate, setHourlyRate] = useState(100);
   const [hours, setHours] = useState(1);
 

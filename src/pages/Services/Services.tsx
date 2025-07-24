@@ -7,6 +7,7 @@ import {
   FaCalendarAlt,
   FaShieldAlt,
 } from "react-icons/fa";
+import { useEffect } from "react";
 
 const services = [
   {
@@ -42,6 +43,9 @@ const services = [
 ];
 
 const Services = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-20">
       {/* Header */}

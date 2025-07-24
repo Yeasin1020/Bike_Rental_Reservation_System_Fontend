@@ -26,12 +26,14 @@ const BikeList: React.FC = () => {
   const [filterBrand, setFilterBrand] = useState("");
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const [visibleCount, setVisibleCount] = useState(6);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
 
+  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Fetch bikes from API
   useEffect(() => {
     const fetchBikes = async () => {
       setLoading(true);
@@ -50,6 +52,7 @@ const BikeList: React.FC = () => {
     fetchBikes();
   }, []);
 
+  // Filter logic
   useEffect(() => {
     let result = [...bikes];
 
@@ -73,8 +76,10 @@ const BikeList: React.FC = () => {
     setVisibleCount(6);
   }, [search, filterBrand, onlyAvailable, bikes]);
 
+  // Unique brands for filter dropdown
   const brands = Array.from(new Set(bikes.map((b) => b.brand)));
 
+  // Load more bikes handler
   const handleSeeMore = () => {
     setVisibleCount((prev) => prev + 6);
   };
