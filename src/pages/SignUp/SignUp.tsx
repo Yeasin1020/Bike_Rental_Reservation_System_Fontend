@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRegisterMutation } from "../../redux/features/auth/authApi";
 import { toast, ToastContainer } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { isFetchBaseQueryError } from "../../utils/errorUtils";
 
 interface ISignupFormInput {
@@ -25,8 +25,14 @@ const SignUpForm: React.FC = () => {
   const onSubmit: SubmitHandler<ISignupFormInput> = async (data) => {
     try {
       await registerUser({ ...data, role: "user" }).unwrap();
-      toast.success("Signup successful! Please login.");
-      navigate("/login");
+
+      // ✅ Store email in localStorage
+      localStorage.setItem("registeredEmail", data.email);
+
+      toast.success("Signup successful! Redirecting to login...");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
       console.error("Signup error:", err);
       toast.error("Signup failed. Please try again.");
@@ -140,9 +146,9 @@ const SignUpForm: React.FC = () => {
 
         <p className="text-sm text-center text-gray-600">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-blue-600 hover:underline">
             Log in
-          </a>
+          </Link>
         </p>
       </div>
     </div>

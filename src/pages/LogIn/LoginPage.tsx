@@ -4,8 +4,9 @@ import { setUser } from "../../redux/features/auth/authSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import { verifyToken } from "../../utils/varifyToken";
 import { toast, ToastContainer } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { isFetchBaseQueryError } from "../../utils/errorUtils";
+import { useEffect, useState } from "react";
 
 interface ILoginFormInput {
   email: string;
@@ -24,11 +25,32 @@ const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const [defaultEmail, setDefaultEmail] = useState("");
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("registeredEmail");
+    if (storedEmail) {
+      setDefaultEmail(storedEmail);
+    }
+  }, []);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILoginFormInput>();
+    setValue,
+  } = useForm<ILoginFormInput>({
+    defaultValues: {
+      email: "", // Will be updated below if localStorage value found
+    },
+  });
+
+  useEffect(() => {
+    if (defaultEmail) {
+      setValue("email", defaultEmail);
+      localStorage.removeItem("registeredEmail");
+    }
+  }, [defaultEmail, setValue]);
 
   const [login, { error, isLoading }] = useLoginMutation();
 
@@ -129,9 +151,9 @@ const LoginForm: React.FC = () => {
 
         <p className="text-sm text-center text-gray-600">
           Don’t have an account?{" "}
-          <a href="/signUp" className="text-blue-600 hover:underline">
+          <Link to="/signUp" className="text-blue-600 hover:underline">
             Sign up
-          </a>
+          </Link>
         </p>
       </div>
     </div>
