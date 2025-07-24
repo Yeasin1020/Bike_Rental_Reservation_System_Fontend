@@ -50,7 +50,7 @@ const UserDashboard: React.FC = () => {
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-semibold">User Dashboard</h2>
             <button
-              className="text-gray-400 focus:outline-none md:hidden"
+              className="text-gray-400  focus:outline-none md:hidden"
               onClick={toggleSidebar}
             >
               <FaTimes />
@@ -116,9 +116,9 @@ const UserDashboard: React.FC = () => {
         <div className="md:hidden mb-4">
           <button
             onClick={toggleSidebar}
-            className="text-gray-700 focus:outline-none"
+            className="text-gray-700 focus:outline-none p-2 ml-3 rounded-md hover:bg-gray-200 transition"
           >
-            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+            {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
         </div>
         <div className="space-y-6">{renderContent()}</div>
