@@ -33,7 +33,7 @@ const HistoryAndMilestones = () => {
   ];
 
   return (
-    <div className=" from-blue-50 to-blue-100 py-16 px-6 md:px-12">
+    <div className=" py-16 px-6 md:px-12">
       <div className="max-w-screen-xl mx-auto text-center space-y-12">
         {/* Heading */}
         <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-800">
@@ -45,7 +45,7 @@ const HistoryAndMilestones = () => {
           {milestones.map((milestone, index) => (
             <div
               key={index}
-              className="relative flex flex-col sm:flex-row items-center bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
+              className="relative flex flex-col sm:flex-row items-center  p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
             >
               {/* Year Circle */}
               <div

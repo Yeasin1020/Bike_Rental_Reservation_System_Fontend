@@ -21,7 +21,7 @@ const MissionStatement = () => {
 
         {/* Values Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 mt-12">
-          <div className="space-y-4 text-center bg-white p-8 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
+          <div className="space-y-4 text-center  p-8 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <h3 className="text-3xl font-semibold text-blue-600">Quality</h3>
             <p className="text-gray-600">
               We offer well-maintained, high-performance bikes for all riders.
