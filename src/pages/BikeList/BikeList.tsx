@@ -29,6 +29,10 @@ const BikeList: React.FC = () => {
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const fetchBikes = async () => {
       setLoading(true);
       try {
