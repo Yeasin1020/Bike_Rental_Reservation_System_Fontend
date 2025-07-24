@@ -1,145 +1,152 @@
-// import React from "react";
-// import { toast, ToastContainer } from "react-toastify"; // Correct import here
-// import "react-toastify/dist/ReactToastify.css";
-// import { useNavigate } from "react-router-dom";
-// import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-// import { RootState } from "../../redux/store";
-// import { useSignUpMutation } from "../../redux/features/auth/authApi";
-// import {
-//   setAddress,
-//   setEmail,
-//   setName,
-//   setPassword,
-//   setPhone,
-// } from "../../redux/features/signUpSlice";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useRegisterMutation } from "../../redux/features/auth/authApi";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { isFetchBaseQueryError } from "../../utils/errorUtils";
 
-// const SignUp: React.FC = () => {
-//   const dispatch = useAppDispatch();
-//   const navigate = useNavigate();
-//   const { name, email, password, phone, role, address } = useAppSelector(
-//     (state: RootState) => state.signup
-//   );
+interface ISignupFormInput {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  address: string;
+}
 
-//   const [signup] = useSignUpMutation();
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
+const SignUpForm: React.FC = () => {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ISignupFormInput>();
 
-//     // Validation check before making API call
-//     if (!name || !email || !password || !phone || !address) {
-//       toast.error("Please fill in all fields.");
-//       return;
-//     }
+  const [registerUser, { isLoading, error }] = useRegisterMutation();
 
-//     try {
-//       const user = await signup({
-//         name,
-//         email,
-//         password,
-//         phone,
-//         role,
-//         address,
-//       });
+  const onSubmit: SubmitHandler<ISignupFormInput> = async (data) => {
+    try {
+      await registerUser({ ...data, role: "user" }).unwrap();
+      toast.success("Signup successful! Please login.");
+      navigate("/login");
+    } catch (err) {
+      console.error("Signup error:", err);
+      toast.error("Signup failed. Please try again.");
+    }
+  };
 
-//       if (user?.data) {
-//         toast.success("Sign-up successful!");
-//         setTimeout(() => {
-//           navigate("/login");
-//         }, 2000);
-//       }
-//     } catch (err) {
-//       toast.error("Sign-up failed. Please try again.");
-//       console.error(err);
-//     }
-//   };
+  return (
+    <div className="flex items-center justify-center min-h-screen px-4 py-8 bg-gray-100 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md p-8 space-y-4 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Create a New Account
+        </h2>
 
-//   return (
-//     <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow-md">
-//       <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-//       <form onSubmit={handleSubmit}>
-//         <div className="mb-4">
-//           <label className="block text-sm font-medium mb-1" htmlFor="name">
-//             Name
-//           </label>
-//           <input
-//             id="name"
-//             value={name}
-//             onChange={(e) => dispatch(setName(e.target.value))}
-//             type="text"
-//             placeholder="Enter your name"
-//             className="w-full p-2 border rounded"
-//           />
-//         </div>
+        {isFetchBaseQueryError(error) && (
+          <div className="p-2 text-sm text-red-600 bg-red-100 rounded">
+            {(error.data as { message?: string })?.message ||
+              "Something went wrong!"}
+          </div>
+        )}
 
-//         <div className="mb-4">
-//           <label className="block text-sm font-medium mb-1" htmlFor="email">
-//             Email
-//           </label>
-//           <input
-//             id="email"
-//             type="email"
-//             value={email}
-//             onChange={(e) => dispatch(setEmail(e.target.value))}
-//             placeholder="Enter your email"
-//             className="w-full p-2 border rounded"
-//           />
-//         </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Full Name
+            </label>
+            <input
+              type="text"
+              {...register("name", { required: "Name is required" })}
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your name"
+            />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name.message}</p>
+            )}
+          </div>
 
-//         <div className="mb-4">
-//           <label className="block text-sm font-medium mb-1" htmlFor="password">
-//             Password
-//           </label>
-//           <input
-//             id="password"
-//             type="password"
-//             value={password}
-//             onChange={(e) => dispatch(setPassword(e.target.value))}
-//             placeholder="Enter your password"
-//             className="w-full p-2 border rounded"
-//           />
-//         </div>
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email Address
+            </label>
+            <input
+              type="email"
+              {...register("email", { required: "Email is required" })}
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your email"
+            />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email.message}</p>
+            )}
+          </div>
 
-//         <div className="mb-4">
-//           <label
-//             className="block text-sm font-medium mb-1"
-//             htmlFor="phoneNumber"
-//           >
-//             Phone Number
-//           </label>
-//           <input
-//             id="phoneNumber"
-//             type="tel"
-//             value={phone}
-//             onChange={(e) => dispatch(setPhone(e.target.value))}
-//             placeholder="Enter your phone number"
-//             className="w-full p-2 border rounded"
-//           />
-//         </div>
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              {...register("password", { required: "Password is required" })}
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your password"
+            />
+            {errors.password && (
+              <p className="text-sm text-red-500">{errors.password.message}</p>
+            )}
+          </div>
 
-//         <div className="mb-4">
-//           <label className="block text-sm font-medium mb-1" htmlFor="address">
-//             Address
-//           </label>
-//           <textarea
-//             id="address"
-//             value={address}
-//             onChange={(e) => dispatch(setAddress(e.target.value))}
-//             placeholder="Enter your address"
-//             className="w-full p-2 border rounded"
-//           />
-//         </div>
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
+            <input
+              type="text"
+              {...register("phone", { required: "Phone number is required" })}
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your phone"
+            />
+            {errors.phone && (
+              <p className="text-sm text-red-500">{errors.phone.message}</p>
+            )}
+          </div>
 
-//         <button
-//           type="submit"
-//           className="px-8 py-3 bg-[#005FA8] text-white font-semibold rounded-lg shadow-md hover:bg-[#002766] transition-colors transform hover:scale-110 active:scale-95"
-//         >
-//           Sign Up
-//         </button>
-//       </form>
+          {/* Address */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Address
+            </label>
+            <input
+              type="text"
+              {...register("address", { required: "Address is required" })}
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your address"
+            />
+            {errors.address && (
+              <p className="text-sm text-red-500">{errors.address.message}</p>
+            )}
+          </div>
 
-//       {/* Toast container to render notifications */}
-//       <ToastContainer />
-//     </div>
-//   );
-// };
+          <button
+            type="submit"
+            className="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none"
+            disabled={isLoading}
+          >
+            {isLoading ? "Creating account..." : "Sign Up"}
+          </button>
+          <ToastContainer />
+        </form>
 
-// export default SignUp;
+        <p className="text-sm text-center text-gray-600">
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-600 hover:underline">
+            Log in
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default SignUpForm;

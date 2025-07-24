@@ -43,7 +43,7 @@ const HeroSection = () => {
 
       {/* Background section */}
       <div
-        className={`relative min-h-screen bg-center bg-no-repeat bg-cover transition-opacity duration-700 ease-in-out will-change-opacity ${
+        className={`relative min-h-[70vh] sm:min-h-[50vh] md:min-h-screen bg-center bg-no-repeat bg-cover transition-opacity duration-700 ease-in-out will-change-opacity ${
           bgLoaded ? "opacity-100" : "opacity-0"
         }`}
         style={{
