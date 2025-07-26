@@ -15,23 +15,32 @@ import RentalHistory from "./RentalHistory";
 const LOCAL_STORAGE_KEY = "user-dashboard-selected-section";
 
 const UserDashboard: React.FC = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState("userProfile");
 
-  // Load selection from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) setSelectedSection(saved);
   }, []);
 
-  // Update localStorage on section change
   const handleSectionChange = (section: string) => {
     setSelectedSection(section);
     localStorage.setItem(LOCAL_STORAGE_KEY, section);
+
+    // Close sidebar on mobile when selecting a section
+    if (window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
   };
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
+  };
+
+  const closeSidebar = () => {
+    if (window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
   };
 
   const renderContent = () => {
@@ -50,21 +59,17 @@ const UserDashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-[#F3F4F6] relative overflow-hidden">
       {/* Sidebar */}
       <div
-        className={`fixed md:static top-0 left-0 w-64 bg-[#18202F] text-white p-4 z-50 transform
+        className={`fixed md:static top-0 left-0 w-64 bg-[#18202F] text-white p-4 z-50 transform transition-transform duration-300 ease-in-out h-full flex flex-col justify-between
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} 
-        transition-transform duration-300 md:translate-x-0 flex flex-col justify-between h-full`}
+        md:translate-x-0`}
       >
-        {/* Top: Title + Close */}
         <div>
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-semibold">User Dashboard</h2>
-            <button
-              className="text-gray-400 focus:outline-none md:hidden"
-              onClick={toggleSidebar}
-            >
+            <button className="text-gray-400 md:hidden" onClick={toggleSidebar}>
               <FaTimes />
             </button>
           </div>
@@ -94,7 +99,6 @@ const UserDashboard: React.FC = () => {
           </ul>
         </div>
 
-        {/* Bottom: Settings */}
         <div>
           <SidebarItem
             icon={<FaCog className="mr-3" />}
@@ -106,9 +110,17 @@ const UserDashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+
       {/* Main Content */}
-      <div className="flex-1 p-2 lg:p-8 overflow-y-auto">
-        {/* Mobile toggle */}
+      <div className="flex-1 p-2 lg:p-8 overflow-y-auto relative z-0">
+        {/* Mobile toggle button */}
         <div className="md:hidden mb-4">
           <button
             onClick={toggleSidebar}
@@ -125,7 +137,7 @@ const UserDashboard: React.FC = () => {
 
 export default UserDashboard;
 
-// ✅ Reusable Sidebar Item Component
+// Reusable Sidebar Item Component
 const SidebarItem = ({
   icon,
   label,

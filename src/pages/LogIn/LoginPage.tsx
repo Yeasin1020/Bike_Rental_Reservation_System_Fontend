@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { isFetchBaseQueryError } from "../../utils/errorUtils";
 import { useEffect, useState } from "react";
+import Loading from "../../components/ui/Loading";
 
 interface ILoginFormInput {
   email: string;
@@ -85,7 +86,9 @@ const LoginForm: React.FC = () => {
       toast.error("Login failed. Please try again.");
     }
   };
-
+  if (isLoading) {
+    return <Loading></Loading>;
+  }
   return (
     <div className="flex items-center justify-center min-h-screen px-4 py-8  sm:px-6 lg:px-8">
       <div className="w-full max-w-md p-8 space-y-4  rounded-lg shadow-md">

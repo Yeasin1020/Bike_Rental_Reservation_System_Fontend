@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { AppDispatch, RootState } from "../../redux/store";
 import { logout } from "../../redux/features/auth/authSlice";
 
@@ -173,14 +173,6 @@ const NavBar: React.FC = () => {
                   >
                     Logout
                   </button>
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-2 hover:text-blue-400 transition duration-300"
-                    onClick={toggleMenu}
-                  >
-                    <FaUserCircle size={24} />
-                    Profile
-                  </Link>
                 </>
               ) : (
                 <>

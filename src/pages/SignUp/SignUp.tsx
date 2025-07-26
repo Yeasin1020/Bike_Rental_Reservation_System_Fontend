@@ -3,6 +3,7 @@ import { useRegisterMutation } from "../../redux/features/auth/authApi";
 import { toast, ToastContainer } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { isFetchBaseQueryError } from "../../utils/errorUtils";
+import Loading from "../../components/ui/Loading";
 
 interface ISignupFormInput {
   name: string;
@@ -38,7 +39,9 @@ const SignUpForm: React.FC = () => {
       toast.error("Signup failed. Please try again.");
     }
   };
-
+  if (isLoading) {
+    return <Loading></Loading>;
+  }
   return (
     <div className="flex items-center justify-center min-h-screen px-4 py-8  sm:px-6 lg:px-8">
       <div className="w-full max-w-md p-8 space-y-4  rounded-lg shadow-md">
