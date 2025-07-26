@@ -16,7 +16,7 @@ const MainLayouts = () => {
           gridThickness={15}
           mouseInteraction={true}
           mouseInteractionRadius={1.2}
-          opacity={0.05} // 🔍 Subtle background
+          opacity={0.07} // 🔍 Subtle background
         />
       </div>
 

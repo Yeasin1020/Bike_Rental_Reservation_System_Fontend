@@ -4,6 +4,7 @@ import {
   useGetAllRentalsQuery,
   useReturnBikeMutation,
 } from "../../../redux/api/bikeRentalApi";
+import Loading from "../../../components/ui/Loading";
 
 const ReturnBike: React.FC = () => {
   // Fetch all rental data from the API
@@ -29,6 +30,7 @@ const ReturnBike: React.FC = () => {
       console.log(returnBike);
       console.error("Error fetching rentals:", fetchError);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rentalsData, isFetchError, fetchError]);
 
   // Handle the bike return process
@@ -47,7 +49,7 @@ const ReturnBike: React.FC = () => {
   };
 
   // Loading state
-  if (isLoadingRentals) return <div>Loading all rentals...</div>;
+  if (isLoadingRentals) return <Loading></Loading>;
 
   // Error state
   if (isFetchError)
@@ -61,7 +63,7 @@ const ReturnBike: React.FC = () => {
   const rentals = rentalsData?.data || [];
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
+    <div className="p-4 sm:p-6  min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
@@ -85,7 +87,7 @@ const ReturnBike: React.FC = () => {
 
       {/* Rentals Table (Desktop View) */}
       <div className="hidden sm:block overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg">
+        <table className="min-w-full  shadow-md rounded-lg">
           <thead className="bg-gradient-to-r from-blue-500 to-blue-700 text-white">
             <tr>
               <th className="text-left p-4">Bike</th>
@@ -114,7 +116,7 @@ const ReturnBike: React.FC = () => {
                     : "Not Returned"}
                 </td>
                 <td className="p-4 text-center">
-                  {rental.totalCost ? `$${rental.totalCost}` : "-"}
+                  {rental.totalCost ? `৳ ${rental.totalCost}` : "-"}
                 </td>
                 <td className="p-4 text-center">
                   <span
@@ -184,8 +186,9 @@ const ReturnBike: React.FC = () => {
             </p>
             <p className="text-gray-600 mb-4">
               <strong>Cost:</strong>{" "}
-              {rental.totalCost ? `$${rental.totalCost}` : "-"}
+              {rental.totalCost ? `৳${rental.totalCost}` : "-"}
             </p>
+
             {!rental.isReturned && (
               <button
                 onClick={() => handleReturnBike(rental._id)}

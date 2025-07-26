@@ -6,6 +6,7 @@ import {
 } from "../../../redux/api/userManagementApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../../../components/ui/Loading";
 
 // Define User type locally for UI usage
 interface User {
@@ -73,7 +74,7 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div className="p-6">Loading users...</div>;
+  if (isLoading) return <Loading></Loading>;
 
   if (isError)
     return <div className="p-6 text-red-500">{getErrorMessage(error)}</div>;
@@ -93,7 +94,7 @@ const UserManagement: React.FC = () => {
         {users.map((user) => (
           <div
             key={user.id}
-            className="bg-white shadow-md rounded-lg p-4 border hover:shadow-lg transition-shadow"
+            className=" shadow-md rounded-lg p-4 border hover:shadow-lg transition-shadow"
           >
             {/* User Details */}
             <div className="mb-4">

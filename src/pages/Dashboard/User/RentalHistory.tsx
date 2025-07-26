@@ -6,6 +6,8 @@ import { BsCurrencyDollar } from "react-icons/bs";
 import Loading from "../../../components/ui/Loading";
 
 interface Rental {
+  totalCost: number;
+  isReturn: boolean;
   _id: string;
   startTime: string;
   returnTime: string | null;
@@ -34,7 +36,7 @@ const RentalHistory: React.FC = () => {
 
   const [now, setNow] = useState(new Date());
 
-  // Update `now` every second for live countdown
+  // Live clock
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
@@ -42,8 +44,7 @@ const RentalHistory: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (isLoading) return <Loading></Loading>;
-
+  if (isLoading) return <Loading />;
   if (error)
     return (
       <div className="text-center py-10 text-red-600">
@@ -81,15 +82,25 @@ const RentalHistory: React.FC = () => {
       <div className="space-y-6">
         {rentals.map((rental) => {
           const start = new Date(rental.startTime);
-          const end = rental.returnTime ? new Date(rental.returnTime) : now;
+          const isReturned = rental.isReturned;
+          const end = isReturned ? new Date(rental.returnTime!) : now;
+
           const elapsedMs = end.getTime() - start.getTime();
           const elapsedHours = elapsedMs / (1000 * 60 * 60);
+
           const liveCost = Math.round(
             elapsedHours * rental.bikeDetails.pricePerHour
           );
-          const durationString = rental.isReturned
+
+          const durationString = isReturned
             ? rental.durationHours + " hrs"
             : formatLiveDuration(start, now);
+
+          const costText = isReturned
+            ? `Total Cost: ৳${rental.totalCost}`
+            : `Hourly Rate: ৳${rental.bikeDetails.pricePerHour}`;
+
+          const finalAmount = isReturned ? rental.totalCost : liveCost;
 
           return (
             <div
@@ -118,19 +129,19 @@ const RentalHistory: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
                     <p>
                       <MdAccessTime className="inline-block mr-1 text-indigo-500" />
-                      Started: {format(new Date(rental.startTime), "PPPpp")}
+                      Started: {format(start, "PPPpp")}
                     </p>
                     <p>
                       <MdAccessTime className="inline-block mr-1 text-indigo-500" />
                       Returned:{" "}
-                      {rental.returnTime
-                        ? format(new Date(rental.returnTime), "PPPpp")
+                      {isReturned
+                        ? format(new Date(rental.returnTime!), "PPPpp")
                         : "Not returned yet"}
                     </p>
                     <p>⏳ Duration: {durationString}</p>
                     <p>
                       <BsCurrencyDollar className="inline-block mr-1 text-green-600" />
-                      Hourly Rate: ৳{rental.bikeDetails?.pricePerHour}
+                      {costText}
                     </p>
                   </div>
                 </div>
@@ -138,18 +149,15 @@ const RentalHistory: React.FC = () => {
                 <div className="flex justify-between items-center mt-4">
                   <span
                     className={`text-sm px-3 py-1 rounded-full font-medium ${
-                      rental.isReturned
+                      isReturned
                         ? "bg-green-100 text-green-700"
                         : "bg-yellow-100 text-yellow-700"
                     }`}
                   >
-                    {rental.isReturned ? "Returned" : "Ongoing"}
+                    {isReturned ? "Returned" : "Ongoing"}
                   </span>
                   <span className="text-xl font-bold text-gray-800">
-                    ৳
-                    {rental.isReturned
-                      ? rental.calculatedCost.toLocaleString()
-                      : liveCost.toLocaleString()}
+                    ৳{finalAmount.toLocaleString()}
                   </span>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaUserCog,
   FaBicycle,
@@ -7,14 +7,31 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
-import AdminProfilePage from "./AdminProfilePage"; // Placeholder component for Profile Management
-import BikeManagement from "./BikeManagement"; // Placeholder component for Bike Management
+
+import AdminProfilePage from "./AdminProfilePage";
+import BikeManagement from "./BikeManagement";
 import UserManagement from "./UserManagement";
 import ReturnBike from "./ReturnBike";
+
+const LOCAL_STORAGE_KEY = "admin-dashboard-selected-section";
 
 const AdminDashboard: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [selectedSection, setSelectedSection] = useState("profile");
+
+  // 🔁 Load from localStorage on mount
+  useEffect(() => {
+    const savedSection = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedSection) {
+      setSelectedSection(savedSection);
+    }
+  }, []);
+
+  // 💾 Save selection to localStorage
+  const handleSectionChange = (section: string) => {
+    setSelectedSection(section);
+    localStorage.setItem(LOCAL_STORAGE_KEY, section);
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
@@ -31,7 +48,7 @@ const AdminDashboard: React.FC = () => {
       case "returnBike":
         return <ReturnBike />;
       case "coupons":
-        return <div>Coupon Management Section</div>;
+        return <div>Coupon Management Coming soon</div>;
       default:
         return <AdminProfilePage />;
     }
@@ -54,72 +71,48 @@ const AdminDashboard: React.FC = () => {
             <FaTimes />
           </button>
         </div>
-        <ul>
-          <li>
-            <button
-              onClick={() => setSelectedSection("adminProfileManagement")}
-              className={`flex items-center p-2 rounded-md ${
-                selectedSection === "adminProfileManagement"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              <FaUserCog className="mr-3" /> Profile Management
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setSelectedSection("bikesManagement")}
-              className={`flex items-center p-2 rounded-md ${
-                selectedSection === "bikesManagement"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              <FaBicycle className="mr-3" /> Bike Management
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setSelectedSection("usersManagement")}
-              className={`flex items-center p-2 rounded-md ${
-                selectedSection === "usersManagement"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              <FaUsers className="mr-3" /> User Management
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setSelectedSection("returnBike")}
-              className={`flex items-center p-2 rounded-md ${
-                selectedSection === "returnBike"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              <FaBicycle className="mr-3" /> Return Bike
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setSelectedSection("coupons")}
-              className={`flex items-center p-2 rounded-md ${
-                selectedSection === "coupons"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              <FaGift className="mr-3" /> Coupon Management
-            </button>
-          </li>
+        <ul className="space-y-2">
+          <SidebarItem
+            icon={<FaUserCog className="mr-3" />}
+            label="Profile Management"
+            section="adminProfileManagement"
+            active={selectedSection === "adminProfileManagement"}
+            onClick={handleSectionChange}
+          />
+          <SidebarItem
+            icon={<FaBicycle className="mr-3" />}
+            label="Bike Management"
+            section="bikesManagement"
+            active={selectedSection === "bikesManagement"}
+            onClick={handleSectionChange}
+          />
+          <SidebarItem
+            icon={<FaUsers className="mr-3" />}
+            label="User Management"
+            section="usersManagement"
+            active={selectedSection === "usersManagement"}
+            onClick={handleSectionChange}
+          />
+          <SidebarItem
+            icon={<FaBicycle className="mr-3" />}
+            label="Return Bike"
+            section="returnBike"
+            active={selectedSection === "returnBike"}
+            onClick={handleSectionChange}
+          />
+          <SidebarItem
+            icon={<FaGift className="mr-3" />}
+            label="Coupon Management"
+            section="coupons"
+            active={selectedSection === "coupons"}
+            onClick={handleSectionChange}
+          />
         </ul>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 p-8 bg-gray-100 overflow-y-auto">
+      {/* Main Content */}
+      <div className="flex-1 p-8 overflow-y-auto">
+        {/* Mobile Sidebar Toggle */}
         <div className="md:hidden mb-4">
           <button
             onClick={toggleSidebar}
@@ -128,6 +121,7 @@ const AdminDashboard: React.FC = () => {
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
+
         <div className="space-y-6">{renderContent()}</div>
       </div>
     </div>
@@ -135,3 +129,32 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
+
+// ✅ SidebarItem as Reusable Component
+const SidebarItem = ({
+  icon,
+  label,
+  section,
+  active,
+  onClick,
+}: {
+  icon: JSX.Element;
+  label: string;
+  section: string;
+  active: boolean;
+  onClick: (section: string) => void;
+}) => {
+  return (
+    <li>
+      <button
+        onClick={() => onClick(section)}
+        className={`flex items-center w-full p-2 rounded-md text-left transition ${
+          active ? "bg-gray-700" : "hover:bg-gray-700"
+        }`}
+      >
+        {icon}
+        {label}
+      </button>
+    </li>
+  );
+};

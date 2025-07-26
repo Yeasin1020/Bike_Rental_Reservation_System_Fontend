@@ -7,6 +7,7 @@ import {
 } from "../../../redux/api/bikeApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../../../components/ui/Loading";
 
 // Bike data type expected in the form (with _id as string)
 type TBikeData = {
@@ -115,18 +116,18 @@ const BikeManagement: React.FC = () => {
       </div>
 
       {isLoading ? (
-        <p>Loading...</p>
+        <Loading></Loading>
       ) : isError ? (
         <p>Error loading bikes.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {bikes.length === 0 ? (
-            <p>No bikes available.</p>
+            <p key={bikes.length}>No bikes available.</p>
           ) : (
             bikes.map((bike) => (
               <div
                 key={bike._id}
-                className="p-4 bg-white shadow-md rounded-lg flex flex-col justify-between"
+                className="p-4  shadow-md rounded-lg flex flex-col justify-between"
               >
                 <div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -165,7 +166,7 @@ const BikeManagement: React.FC = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+          <div className="bg-black/20 backdrop-blur-md p-8 rounded-lg shadow-lg w-full max-w-md border border-white/10">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               {bikeData._id ? "Edit Bike" : "Add New Bike"}
             </h2>
