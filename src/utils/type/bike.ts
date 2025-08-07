@@ -1,3 +1,4 @@
+import { Key } from "react";
 
 
 export interface Comment {
@@ -28,7 +29,8 @@ export interface Review {
 }
 
 export interface Bike {
-	_id: { $oid: string };
+	id?: Key | null | undefined;
+	_id: string; // ✅ Changed from { $oid: string } to string
 	name: string;
 	description: string;
 	pricePerHour: number;
