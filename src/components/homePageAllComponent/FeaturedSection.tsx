@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useGetBikesQuery } from "../../redux/api/bikeApi";
 import { Bike } from "../../utils/type/bike";
 import { Link } from "react-router-dom";
-import Loading from "../ui/Loading";
+import BikeCardSkeleton from "./BikeCardSkeleton";
 
 const FeaturedSection: React.FC = () => {
   const { data, error, isLoading } = useGetBikesQuery(undefined, {
@@ -21,14 +21,14 @@ const FeaturedSection: React.FC = () => {
     setVisibleCount((prev) => prev + 4);
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <BikeCardSkeleton />;
   if (error)
     return (
       <p className="text-center text-red-500">Failed to load featured bikes.</p>
     );
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 ">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-12">

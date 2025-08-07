@@ -30,7 +30,7 @@ export interface Review {
 
 export interface Bike {
 	id?: Key | null | undefined;
-	_id: string; // ✅ Changed from { $oid: string } to string
+	_id: string;
 	name: string;
 	description: string;
 	pricePerHour: number;

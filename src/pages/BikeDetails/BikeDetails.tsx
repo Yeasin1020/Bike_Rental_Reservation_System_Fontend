@@ -4,8 +4,8 @@ import { Bike } from "../../utils/type/bike";
 import { useEffect, useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { useCreateRentalMutation } from "../../redux/api/bikeRentalApi";
-import Loading from "../../components/ui/Loading";
 import { ReviewCard } from "../../components/ReviewCard";
+import BikeDetailsSkeleton from "./BikeDetailsSkeleton";
 
 const BikeDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,7 +17,7 @@ const BikeDetails = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <BikeDetailsSkeleton></BikeDetailsSkeleton>;
 
   if (isError || !data?.data)
     return (
