@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useGetBikeByIdQuery } from "../../redux/api/bikeApi";
-import { Bike } from "../../utils/type/bike";
+import { Bike, Review } from "../../utils/type/bike";
 import { useEffect, useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { useCreateRentalMutation } from "../../redux/api/bikeRentalApi";
@@ -12,6 +12,9 @@ const BikeDetails = () => {
   const { data, isLoading, isError, refetch } = useGetBikeByIdQuery(id ?? "");
   const [createRental, { isLoading: isRenting }] = useCreateRentalMutation();
   const [renting, setRenting] = useState(false);
+
+  // New state to control pending confirmation
+  const [pendingRental, setPendingRental] = useState<boolean>(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -28,19 +31,78 @@ const BikeDetails = () => {
 
   const bike: Bike = data.data;
 
-  const handleRent = async () => {
+  // ⭐ Calculate rating breakdown counts
+  const ratingCounts = [0, 0, 0, 0, 0];
+  (bike.reviews ?? []).forEach((review: Review) => {
+    const r = Math.round(review.rating);
+    if (r >= 1 && r <= 5) {
+      ratingCounts[r - 1]++;
+    }
+  });
+
+  // This will be called when user confirms rental inside the modal/toast
+  const confirmRent = async () => {
     if (!bike._id) return;
     setRenting(true);
+    toast.dismiss(); // close the confirm toast
     try {
       const startTime = new Date().toISOString();
       await createRental({ bikeId: bike._id, startTime }).unwrap();
+
       toast.success("Rental created successfully!");
+
+      // Refetch bike data to update availability and button state
+      await refetch();
+
+      setPendingRental(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to rent bike.");
     } finally {
       setRenting(false);
     }
+  };
+
+  // When user clicks "Rent Now" button
+  const handleRentClick = () => {
+    setPendingRental(true);
+    toast(
+      (t) => (
+        <div
+          className="p-4 bg-white rounded shadow-lg max-w-sm mx-auto text-center"
+          style={{ minWidth: "280px" }}
+        >
+          <h4 className="font-semibold mb-2">Confirm Rental</h4>
+          <p className="mb-2">
+            Rent <span className="font-bold">{bike.name}</span> for{" "}
+            <span className="font-bold">{bike.pricePerHour} Tk/hr</span>?
+          </p>
+
+          <div className="flex justify-center gap-4 mt-4">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                setPendingRental(false);
+              }}
+              disabled={renting || isRenting}
+              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmRent}
+              disabled={renting || isRenting}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+            >
+              {renting ? "Processing..." : "Confirm"}
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        duration: Infinity,
+      }
+    );
   };
 
   return (
@@ -123,8 +185,8 @@ const BikeDetails = () => {
           {/* Rent Button */}
           {bike.isAvailable && (
             <button
-              onClick={handleRent}
-              disabled={renting || isRenting}
+              onClick={handleRentClick}
+              disabled={renting || isRenting || pendingRental}
               className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition duration-200 disabled:opacity-50"
             >
               {renting ? "Processing..." : "Rent Now"}
@@ -133,13 +195,49 @@ const BikeDetails = () => {
         </div>
       </div>
 
-      {bike.reviews?.length ? (
-        bike.reviews.map((review) => (
-          <ReviewCard key={review._id} review={review} refetch={refetch} />
-        ))
-      ) : (
-        <p>No reviews yet</p>
+      {/* ⭐ Rating Breakdown */}
+      {(bike.reviews?.length ?? 0) > 0 && (
+        <div className="mt-10 flex justify-center">
+          <div className="w-full max-w-md">
+            <h3 className="text-xl font-semibold mb-2 text-center">
+              Rating Breakdown
+            </h3>
+            <div className="space-y-1 text-sm text-gray-700">
+              {[5, 4, 3, 2, 1].map((star) => (
+                <div key={star} className="flex items-center gap-2">
+                  <span className="w-10">{star} ★</span>
+                  <div className="h-2 bg-gray-200 rounded w-full">
+                    <div
+                      className="h-full bg-yellow-400 rounded"
+                      style={{
+                        width: `${
+                          (ratingCounts[star - 1] /
+                            (bike.reviews?.length ?? 1)) *
+                          100
+                        }%`,
+                      }}
+                    />
+                  </div>
+                  <span>({ratingCounts[star - 1]})</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
+
+      {/* 🔍 Review List */}
+      <div className="mt-8">
+        <h3 className="text-xl font-semibold mb-2">Customer Reviews</h3>
+        {bike.reviews?.length ? (
+          bike.reviews.map((review) => (
+            <ReviewCard key={review._id} review={review} refetch={refetch} />
+          ))
+        ) : (
+          <p>No reviews yet</p>
+        )}
+      </div>
+
       <Toaster />
     </div>
   );
