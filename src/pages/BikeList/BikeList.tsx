@@ -17,6 +17,8 @@ interface Bike {
     city: string;
     area?: string;
   };
+  averageRating?: number;
+  totalRatings?: number;
 }
 
 const BikeList: React.FC = () => {
@@ -28,12 +30,10 @@ const BikeList: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(6);
   const [loading, setLoading] = useState(true);
 
-  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Fetch bikes from API
   useEffect(() => {
     const fetchBikes = async () => {
       setLoading(true);
@@ -52,7 +52,6 @@ const BikeList: React.FC = () => {
     fetchBikes();
   }, []);
 
-  // Filter logic
   useEffect(() => {
     let result = [...bikes];
 
@@ -76,10 +75,8 @@ const BikeList: React.FC = () => {
     setVisibleCount(6);
   }, [search, filterBrand, onlyAvailable, bikes]);
 
-  // Unique brands for filter dropdown
   const brands = Array.from(new Set(bikes.map((b) => b.brand)));
 
-  // Load more bikes handler
   const handleSeeMore = () => {
     setVisibleCount((prev) => prev + 6);
   };
@@ -144,10 +141,24 @@ const BikeList: React.FC = () => {
               <p className="text-gray-600 text-sm">
                 {bike.brand} • {bike.model} • {bike.cc}cc
               </p>
+
+              {/* ⭐ Ratings & Reviews */}
+              {(bike.averageRating !== undefined ||
+                bike.totalRatings !== undefined) && (
+                <div className="mt-1 text-sm text-yellow-600 flex gap-1 items-center">
+                  ⭐ {bike.averageRating?.toFixed(1) ?? "N/A"}/5
+                  <span className="text-gray-500 ml-1">
+                    ({bike.totalRatings ?? 0} review
+                    {bike.totalRatings === 1 ? "" : "s"})
+                  </span>
+                </div>
+              )}
+
               <p className="text-gray-500 text-sm mt-1">
                 📍 {bike.location.city}
                 {bike.location.area ? `, ${bike.location.area}` : ""}
               </p>
+
               <div className="mt-auto pt-3">
                 <p className="text-blue-600 font-semibold text-base">
                   ৳ {bike.pricePerHour}/hr

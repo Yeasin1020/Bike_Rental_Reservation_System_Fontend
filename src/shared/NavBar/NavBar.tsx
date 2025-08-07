@@ -43,19 +43,28 @@ const NavBar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Prevent scroll on mobile when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [menuOpen]);
+
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white shadow-md z-50 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 w-full h-16 bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white shadow-md z-50 transition-transform duration-300 ${
           scrollDirection === "down" ? "-translate-y-full" : "translate-y-0"
         }`}
       >
-        <div className="container mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold tracking-wide">
             BikeRental
           </Link>
 
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             <Link to="/" className={commonLinkStyle}>
               Home
             </Link>
@@ -110,96 +119,88 @@ const NavBar: React.FC = () => {
             )}
           </div>
 
+          {/* Mobile toggle button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded transition-transform duration-200 focus:outline-none focus:ring-0"
+            className="md:hidden p-2 rounded focus:outline-none"
           >
             {menuOpen ? (
               <FaTimes
                 size={22}
-                className="text-white hover:scale-110 duration-300"
+                className="text-white hover:scale-110 transition duration-300"
               />
             ) : (
               <FaBars
                 size={22}
-                className="text-white hover:scale-110 duration-300"
+                className="text-white hover:scale-110 transition duration-300"
               />
             )}
           </button>
         </div>
 
+        {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden bg-gray-900 text-white">
-            <div className="px-6 py-4 space-y-4 flex flex-col">
-              {[
-                "/",
-                "/about-us",
-                "/bike-list",
-                "/services",
-                "/pricing",
-                "/contact",
-              ].map((path, i) => (
-                <Link
-                  key={i}
-                  to={path}
-                  onClick={toggleMenu}
-                  className="hover:text-blue-400 transition duration-300"
-                >
-                  {path === "/"
-                    ? "Home"
-                    : path
-                        .replace("/", "")
-                        .replace("-", " ")
-                        .replace(/\b\w/g, (c) => c.toUpperCase())}
-                </Link>
-              ))}
+          <div className="md:hidden bg-gray-900 text-white px-6 py-4 space-y-4">
+            {[
+              { path: "/", label: "Home" },
+              { path: "/about-us", label: "About Us" },
+              { path: "/bike-list", label: "Bike List" },
+              { path: "/services", label: "Services" },
+              { path: "/pricing", label: "Pricing" },
+              { path: "/contact", label: "Contact" },
+            ].map(({ path, label }) => (
+              <Link
+                key={path}
+                to={path}
+                onClick={toggleMenu}
+                className="block hover:text-blue-400 transition duration-300"
+              >
+                {label}
+              </Link>
+            ))}
 
-              {token ? (
-                <>
-                  <Link
-                    to={`/${
-                      user?.role === "admin"
-                        ? "adminDashboard"
-                        : "userDashboard"
-                    }`}
-                    className={`${buttonStyle} bg-blue-600 hover:bg-blue-500 w-full text-center`}
-                    onClick={toggleMenu}
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className={`${buttonStyle} bg-red-600 hover:bg-red-500 w-full`}
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className={`${buttonStyle} bg-blue-600 hover:bg-blue-500 w-full text-center`}
-                    onClick={toggleMenu}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signUp"
-                    className={`${buttonStyle} bg-green-600 hover:bg-green-500 w-full text-center`}
-                    onClick={toggleMenu}
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
-            </div>
+            {token ? (
+              <>
+                <Link
+                  to={`/${
+                    user?.role === "admin" ? "adminDashboard" : "userDashboard"
+                  }`}
+                  onClick={toggleMenu}
+                  className={`${buttonStyle} bg-blue-600 hover:bg-blue-500 w-full text-center block`}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className={`${buttonStyle} bg-red-600 hover:bg-red-500 w-full block`}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={toggleMenu}
+                  className={`${buttonStyle} bg-blue-600 hover:bg-blue-500 w-full text-center block`}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signUp"
+                  onClick={toggleMenu}
+                  className={`${buttonStyle} bg-green-600 hover:bg-green-500 w-full text-center block`}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         )}
       </nav>
-      {/* Optional: Padding to prevent overlap */}
-      <div className="h-[60px] md:h-[63px]" />
 
-      {/* adjust to match nav height */}
+      {/* Padding to prevent overlap */}
+      <div className="h-16" />
     </>
   );
 };

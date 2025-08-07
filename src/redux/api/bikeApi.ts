@@ -28,6 +28,7 @@ export const bikeApi = createApi({
 			return headers;
 		},
 	}),
+	tagTypes: ["Review"],
 	endpoints: (builder) => ({
 		// ✅ Get all bikes
 		getBikes: builder.query<BikesApiResponse, void>({
@@ -37,7 +38,13 @@ export const bikeApi = createApi({
 		// ✅ Get single bike by ID
 		getBikeById: builder.query<SingleBikeApiResponse, string>({
 			query: (id) => `/bikes/${id}`,
+			providesTags: (result) =>
+				result?.data?.reviews?.map((review) => ({
+					type: "Review" as const,
+					id: review._id,
+				})) ?? [],
 		}),
+
 
 		// ✅ Create
 		createBike: builder.mutation({

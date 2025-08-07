@@ -2,13 +2,14 @@ import { useParams } from "react-router-dom";
 import { useGetBikeByIdQuery } from "../../redux/api/bikeApi";
 import { Bike } from "../../utils/type/bike";
 import { useEffect, useState } from "react";
-import { toast, Toaster } from "react-hot-toast"; // <-- You must have this RTK query
+import { toast, Toaster } from "react-hot-toast";
 import { useCreateRentalMutation } from "../../redux/api/bikeRentalApi";
 import Loading from "../../components/ui/Loading";
+import { ReviewCard } from "../../components/ReviewCard";
 
 const BikeDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading, isError } = useGetBikeByIdQuery(id ?? "");
+  const { data, isLoading, isError, refetch } = useGetBikeByIdQuery(id ?? "");
   const [createRental, { isLoading: isRenting }] = useCreateRentalMutation();
   const [renting, setRenting] = useState(false);
 
@@ -16,7 +17,7 @@ const BikeDetails = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  if (isLoading) return <Loading></Loading>;
+  if (isLoading) return <Loading />;
 
   if (isError || !data?.data)
     return (
@@ -43,7 +44,7 @@ const BikeDetails = () => {
   };
 
   return (
-    <div className="min-h-screen max-w-6xl mx-auto p-4 md:p-6  rounded-lg shadow-md mt-8">
+    <div className="min-h-screen max-w-6xl mx-auto p-4 md:p-6 rounded-lg shadow-md mt-8">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Image Section */}
         <div className="lg:w-1/2 w-full">
@@ -94,11 +95,11 @@ const BikeDetails = () => {
             />
           </div>
 
-          {/* Rating */}
+          {/* Rating Summary */}
           <div className="flex items-center gap-2 text-sm mt-1">
             <span className="text-yellow-500 text-base">★</span>
             <span className="text-gray-700">
-              {bike.averageRating} / 5.0 ({bike.totalRatings} ratings)
+              {bike.averageRating} / 5.0 ({bike.totalRatings} reviews)
             </span>
           </div>
 
@@ -130,15 +131,23 @@ const BikeDetails = () => {
             </button>
           )}
         </div>
-        <Toaster></Toaster>
       </div>
+
+      {bike.reviews?.length ? (
+        bike.reviews.map((review) => (
+          <ReviewCard key={review._id} review={review} refetch={refetch} />
+        ))
+      ) : (
+        <p>No reviews yet</p>
+      )}
+      <Toaster />
     </div>
   );
 };
 
 export default BikeDetails;
 
-// Utility Component
+// Utility Detail component
 const Detail = ({
   label,
   value,

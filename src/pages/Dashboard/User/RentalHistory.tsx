@@ -3,7 +3,9 @@ import { format } from "date-fns";
 import { useGetRentalsQuery } from "../../../redux/api/bikeRentalApi";
 import { MdAccessTime, MdLocationOn } from "react-icons/md";
 import { BsCurrencyDollar } from "react-icons/bs";
-import Loading from "../../../components/ui/Loading";
+import SubmitReviewInline from "./SubmitReviewInline";
+import { Toaster } from "react-hot-toast";
+import RentalCardSkeleton from "./Skeleton/RentalCardSkeleton";
 
 interface Rental {
   totalCost: number;
@@ -15,6 +17,7 @@ interface Rental {
   calculatedCost: number;
   durationHours: string;
   bikeDetails: {
+    _id: string;
     name: string;
     model: string;
     brand: string;
@@ -22,6 +25,7 @@ interface Rental {
     pricePerHour: number;
   };
   bikeId: {
+    _id: string;
     location: {
       city: string;
       area: string;
@@ -35,8 +39,8 @@ const RentalHistory: React.FC = () => {
   });
 
   const [now, setNow] = useState(new Date());
+  const [showReviewFormId, setShowReviewFormId] = useState<string | null>(null);
 
-  // Live clock
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
@@ -44,7 +48,7 @@ const RentalHistory: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <RentalCardSkeleton></RentalCardSkeleton>;
   if (error)
     return (
       <div className="text-center py-10 text-red-600">
@@ -76,6 +80,7 @@ const RentalHistory: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-4 sm:p-6">
+      <Toaster position="top-center" reverseOrder={false} />
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">
         Rental History
       </h1>
@@ -107,14 +112,12 @@ const RentalHistory: React.FC = () => {
               key={rental._id}
               className="flex flex-col sm:flex-row gap-4 bg-white rounded-xl shadow-md overflow-hidden border border-gray-200"
             >
-              {/* Bike Image */}
               <img
                 src={rental.bikeDetails?.image}
                 alt={rental.bikeDetails?.name}
                 className="w-full sm:w-48 h-48 object-cover"
               />
 
-              {/* Content */}
               <div className="flex-1 p-4 flex flex-col justify-between">
                 <div>
                   <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
@@ -144,6 +147,25 @@ const RentalHistory: React.FC = () => {
                       {costText}
                     </p>
                   </div>
+
+                  {isReturned && (
+                    <div className="mt-4 space-y-2">
+                      {showReviewFormId === rental._id ? (
+                        <SubmitReviewInline
+                          bikeId={rental.bikeId?._id || rental.bikeDetails._id}
+                          bookingId={rental._id}
+                          onSuccess={() => setShowReviewFormId(null)}
+                        />
+                      ) : (
+                        <button
+                          onClick={() => setShowReviewFormId(rental._id)}
+                          className="text-sm bg-blue-100 text-blue-700 font-medium px-4 py-1.5 rounded-md hover:bg-blue-200 transition duration-200"
+                        >
+                          📝 Write a Review
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-between items-center mt-4">

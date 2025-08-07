@@ -11,6 +11,7 @@ import {
 import UserProfilePage from "./UserProfile";
 import BikeList from "../../BikeList/BikeList";
 import RentalHistory from "./RentalHistory";
+import { Toaster } from "react-hot-toast";
 
 const LOCAL_STORAGE_KEY = "user-dashboard-selected-section";
 
@@ -60,6 +61,7 @@ const UserDashboard: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-[#F3F4F6] relative overflow-hidden">
+      <Toaster position="top-center" reverseOrder={false} />
       {/* Sidebar */}
       <div
         className={`fixed md:static top-0 left-0 w-64 bg-[#18202F] text-white p-4 z-50 transform transition-transform duration-300 ease-in-out h-full flex flex-col justify-between

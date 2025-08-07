@@ -1,3 +1,32 @@
+
+
+export interface Comment {
+	_id: string;
+	text: string;
+	user: {
+		_id: string;
+		name: string;
+	};
+	createdAt: string;
+	replies?: Comment[];
+}
+
+export interface Review {
+	_id: string;
+	user: {
+		_id: string;
+		name: string;
+	};
+	rating: number;
+	text: string;
+	imageUrl?: string;
+	createdAt: string;
+	updatedAt: string;
+	likes?: string[];
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	comments?: Comment[];
+}
+
 export interface Bike {
 	_id: { $oid: string };
 	name: string;
@@ -7,8 +36,8 @@ export interface Bike {
 	brand: string;
 	model: string;
 	year: number;
-	cc: number;
-	color: string;
+	cc?: number;
+	color?: string;
 	fuelType: string;
 	mileage: number;
 	transmission: string;
@@ -17,13 +46,13 @@ export interface Bike {
 	location: {
 		city: string;
 		area: string;
-		coordinates: { lat: number; lng: number };
+		coordinates: {
+			lat: number;
+			lng: number;
+		};
 	};
 	averageRating: number;
 	totalRatings: number;
-	owner: { $oid: string };
 	features: string[];
-	createdAt: { $date: string };
-	updatedAt: { $date: string };
-	__v: number;
+	reviews?: Review[];
 }

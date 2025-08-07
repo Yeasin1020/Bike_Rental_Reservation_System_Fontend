@@ -9,27 +9,34 @@ import {
 	REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+
 import { bikeApi } from './api/bikeApi';
 import { userManagementApi } from './api/userManagementApi';
 import { bikeReturnApi } from './api/bikeRentalApi';
 import { baseApi } from './api/baseApi';
-import { persistReducer, persistStore } from 'redux-persist';
+import { reviewApi } from './api/bikeReviewApi';
 
+// Persist config for auth
 const persistConfig = {
 	key: 'auth',
 	storage,
 };
 
-
+// Apply persist to auth reducer
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
+// Create the store
 export const store = configureStore({
 	reducer: {
+		auth: persistedAuthReducer,
+
+		// RTK Query APIs
 		[bikeApi.reducerPath]: bikeApi.reducer,
 		[userManagementApi.reducerPath]: userManagementApi.reducer,
 		[bikeReturnApi.reducerPath]: bikeReturnApi.reducer,
 		[baseApi.reducerPath]: baseApi.reducer,
-		auth: persistedAuthReducer,
+		[reviewApi.reducerPath]: reviewApi.reducer, // ✅ include reviewApi reducer
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
@@ -40,11 +47,14 @@ export const store = configureStore({
 			bikeApi.middleware,
 			userManagementApi.middleware,
 			bikeReturnApi.middleware,
-			baseApi.middleware
+			baseApi.middleware,
+			reviewApi.middleware // ✅ include reviewApi middleware
 		),
 });
 
+// Export persistor for usage with PersistGate
 export const persistor = persistStore(store);
 
+// Types
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

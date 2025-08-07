@@ -122,7 +122,7 @@ const BikeManagement: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {bikes.length === 0 ? (
-            <p key={bikes?.length}>No bikes available.</p>
+            <p key={bikes.length}>No bikes available.</p>
           ) : (
             bikes.map((bike) => (
               <div
@@ -165,7 +165,7 @@ const BikeManagement: React.FC = () => {
       )}
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4 sm:px-0 my-5 mt-10">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4 sm:px-0 mt-20">
           <div className="bg-white dark:bg-[#0C111B] text-gray-800 dark:text-white w-full max-w-lg sm:rounded-2xl p-6 sm:p-8 shadow-2xl border border-white/10 max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
               {bikeData._id ? "Edit Bike" : "Add New Bike"}

@@ -18,7 +18,6 @@ import Contact from "../pages/Contact/Contact";
 import Services from "../pages/Services/Services";
 import SignUpForm from "../pages/SignUp/SignUp";
 
-// AuthWrapper Component
 // eslint-disable-next-line react-refresh/only-export-components
 const AuthWrapper = ({
   allowedRole,
