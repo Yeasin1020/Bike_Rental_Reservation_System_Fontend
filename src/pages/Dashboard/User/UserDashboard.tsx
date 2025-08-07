@@ -14,6 +14,7 @@ import BikeList from "../../BikeList/BikeList";
 import RentalHistory from "./RentalHistory";
 import { Toaster } from "react-hot-toast";
 import MyReviewRepliesPage from "./MyReviewRepliesPage";
+import UserDashboardAnalytics from "./UserDashboardAnalytics";
 // 🔥 Import your new component here
 
 const LOCAL_STORAGE_KEY = "user-dashboard-selected-section";
@@ -48,6 +49,8 @@ const UserDashboard: React.FC = () => {
 
   const renderContent = () => {
     switch (selectedSection) {
+      case "dashboard":
+        return <UserDashboardAnalytics />;
       case "userProfile":
         return <UserProfilePage />;
       case "bikeBooking":
@@ -82,6 +85,13 @@ const UserDashboard: React.FC = () => {
           </div>
 
           <ul className="space-y-2">
+            <SidebarItem
+              icon={<FaCog className="mr-3" />}
+              label="Dashboard"
+              section="dashboard"
+              active={selectedSection === "dashboard"}
+              onClick={handleSectionChange}
+            />
             <SidebarItem
               icon={<FaUser className="mr-3" />}
               label="Profile"
