@@ -43,6 +43,7 @@ const LoginForm: React.FC = () => {
   } = useForm<ILoginFormInput>({
     defaultValues: {
       email: "", // Will be updated below if localStorage value found
+      password: "",
     },
   });
 
@@ -55,6 +56,7 @@ const LoginForm: React.FC = () => {
 
   const [login, { error, isLoading }] = useLoginMutation();
 
+  // The main submit function (used by form and auto login)
   const onSubmit: SubmitHandler<ILoginFormInput> = async (data) => {
     try {
       const response = await login({
@@ -86,15 +88,41 @@ const LoginForm: React.FC = () => {
       toast.error("Login failed. Please try again.");
     }
   };
+
+  // New handler for one-click login buttons
+  const handleQuickLogin = (email: string, password: string) => {
+    setValue("email", email);
+    setValue("password", password);
+    // call onSubmit manually with credentials
+    onSubmit({ email, password });
+  };
+
   if (isLoading) {
-    return <Loading></Loading>;
+    return <Loading />;
   }
+
   return (
     <div className="flex items-center justify-center min-h-screen px-4 py-8  sm:px-6 lg:px-8">
-      <div className="w-full max-w-md p-8 space-y-4  rounded-lg shadow-md">
+      <div className="w-full max-w-md p-8 space-y-4 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Login to Your Account
         </h2>
+
+        {/* Quick Login Buttons */}
+        <div className="flex justify-center gap-4 mb-4">
+          <button
+            onClick={() => handleQuickLogin("mdeasinsarkar@gmail.com", "123")}
+            className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
+          >
+            Admin Login
+          </button>
+          <button
+            onClick={() => handleQuickLogin("mdeasinsarkar11@gmail.com", "123")}
+            className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+          >
+            User Login
+          </button>
+        </div>
 
         {isFetchBaseQueryError(error) && (
           <div className="p-2 text-sm text-red-600 bg-red-100 rounded">
