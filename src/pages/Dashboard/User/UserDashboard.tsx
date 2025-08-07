@@ -6,12 +6,15 @@ import {
   FaCog,
   FaBars,
   FaTimes,
+  FaCommentDots,
 } from "react-icons/fa";
 
 import UserProfilePage from "./UserProfile";
 import BikeList from "../../BikeList/BikeList";
 import RentalHistory from "./RentalHistory";
 import { Toaster } from "react-hot-toast";
+import MyReviewRepliesPage from "./MyReviewRepliesPage";
+// 🔥 Import your new component here
 
 const LOCAL_STORAGE_KEY = "user-dashboard-selected-section";
 
@@ -28,7 +31,6 @@ const UserDashboard: React.FC = () => {
     setSelectedSection(section);
     localStorage.setItem(LOCAL_STORAGE_KEY, section);
 
-    // Close sidebar on mobile when selecting a section
     if (window.innerWidth < 768) {
       setIsSidebarOpen(false);
     }
@@ -52,6 +54,8 @@ const UserDashboard: React.FC = () => {
         return <BikeList />;
       case "rentalHistory":
         return <RentalHistory />;
+      case "myReviews":
+        return <MyReviewRepliesPage />; // 🔥 Add your new review section here
       case "settings":
         return <div>User Settings Section</div>;
       default:
@@ -62,6 +66,7 @@ const UserDashboard: React.FC = () => {
   return (
     <div className="flex h-screen bg-[#F3F4F6] relative overflow-hidden">
       <Toaster position="top-center" reverseOrder={false} />
+
       {/* Sidebar */}
       <div
         className={`fixed md:static top-0 left-0 w-64 bg-[#18202F] text-white p-4 z-50 transform transition-transform duration-300 ease-in-out h-full flex flex-col justify-between
@@ -98,6 +103,13 @@ const UserDashboard: React.FC = () => {
               active={selectedSection === "rentalHistory"}
               onClick={handleSectionChange}
             />
+            <SidebarItem
+              icon={<FaCommentDots className="mr-3" />}
+              label="My Reviews"
+              section="myReviews"
+              active={selectedSection === "myReviews"}
+              onClick={handleSectionChange}
+            />
           </ul>
         </div>
 
@@ -122,7 +134,6 @@ const UserDashboard: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex-1 p-2 lg:p-8 overflow-y-auto relative z-0">
-        {/* Mobile toggle button */}
         <div className="md:hidden mb-4">
           <button
             onClick={toggleSidebar}
@@ -139,7 +150,7 @@ const UserDashboard: React.FC = () => {
 
 export default UserDashboard;
 
-// Reusable Sidebar Item Component
+// Reusable Sidebar Item
 const SidebarItem = ({
   icon,
   label,

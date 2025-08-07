@@ -44,11 +44,9 @@ export const ReviewCard = ({
     }
 
     setIsCommenting(true);
-    console.log("reviewId:", review._id);
     try {
       await addComment({
         reviewId: review._id,
-
         text: commentText.trim(),
       }).unwrap();
       toast.success("Comment added!");
@@ -61,10 +59,12 @@ export const ReviewCard = ({
       setIsCommenting(false);
     }
   };
+
   if (!review || !review._id || typeof review._id !== "string") {
     console.error("Invalid review ID", review);
-    return;
+    return null;
   }
+
   return (
     <div className="mt-6 p-4 rounded-lg border shadow-sm bg-white">
       {/* Reviewer Info */}
@@ -138,15 +138,33 @@ export const ReviewCard = ({
         </button>
       </div>
 
-      {/* Render Comments */}
+      {/* Render Comments and Replies */}
       {review.comments && review.comments.length > 0 && (
-        <div className="mt-4 space-y-2 border-t pt-4">
+        <div className="mt-4 space-y-4 border-t pt-4">
           {review.comments.map((comment) => (
             <div key={comment._id} className="text-sm text-gray-700">
-              <span className="font-semibold">
-                {comment.user?.name || "User"}:
-              </span>{" "}
-              {comment.text}
+              <p>
+                <span className="font-semibold">
+                  {comment.user?.name || "User"}:
+                </span>{" "}
+                {comment.text}
+              </p>
+
+              {/* Replies */}
+              {comment.replies && comment.replies.length > 0 ? (
+                <div className="ml-4 mt-2 space-y-2 border-l-2 border-gray-300 pl-3">
+                  {comment.replies.map((reply) => (
+                    <p key={reply._id} className="text-sm text-gray-600">
+                      <strong>{reply.user?.name || "Reply"}:</strong>{" "}
+                      {reply.text}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <p className="ml-4 mt-2 text-sm text-gray-400 italic">
+                  No replies yet.
+                </p>
+              )}
             </div>
           ))}
         </div>
