@@ -26,7 +26,12 @@ const FeaturedSection: React.FC = () => {
     return (
       <p className="text-center text-red-500">Failed to load featured bikes.</p>
     );
-
+  const getBikeId = (id: string | { $oid: string }): string => {
+    if (typeof id === "object" && id !== null && "$oid" in id) {
+      return id.$oid;
+    }
+    return id as string;
+  };
   return (
     <section className="py-16 ">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,7 +55,7 @@ const FeaturedSection: React.FC = () => {
         >
           {visibleBikes.map((bike) => (
             <motion.div
-              key={bike._id}
+              key={getBikeId(bike._id)} // safe string key here
               whileHover={{ scale: 1.02 }}
               className="border rounded-xl shadow hover:shadow-lg transition-all duration-200 overflow-hidden bg-white flex flex-col"
             >

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Loading from "../../components/ui/Loading";
+import BikeCardSkeleton from "./BikeCardSkeleton";
 
 interface Bike {
   _id: string;
@@ -81,7 +81,7 @@ const BikeList: React.FC = () => {
     setVisibleCount((prev) => prev + 6);
   };
 
-  if (loading) return <Loading />;
+  if (loading) return <BikeCardSkeleton></BikeCardSkeleton>;
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-screen-2xl mx-auto">

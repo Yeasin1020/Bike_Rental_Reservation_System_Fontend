@@ -7,6 +7,7 @@ import WhyChooseUs from "../../components/homePageAllComponent/WhyChooseUs";
 import ContactUs from "../../components/homePageAllComponent/ContactUs";
 import TestimonialPage from "../NewsletterPage/NewsletterPage";
 import PricingInfo from "../PricingInfo/PricingInfo";
+import ServicesHomePage from "../ServiceHomepage.tsx/ServiceHomePage";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -58,6 +59,16 @@ const Home = () => {
         style={{ marginTop: "3rem" }}
       >
         <ContactUs />
+      </motion.div>
+
+      <motion.div
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        style={{ marginTop: "3rem" }}
+      >
+        <ServicesHomePage></ServicesHomePage>
       </motion.div>
 
       <motion.div
