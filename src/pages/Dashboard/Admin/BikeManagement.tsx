@@ -7,7 +7,7 @@ import {
 } from "../../../redux/api/bikeApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loading from "../../../components/ui/Loading";
+import BikeManagementSkeleton from "./Skeleton/BikeManagementSkeleton";
 
 // Bike data type expected in the form (with _id as string)
 type TBikeData = {
@@ -116,7 +116,7 @@ const BikeManagement: React.FC = () => {
       </div>
 
       {isLoading ? (
-        <Loading></Loading>
+        <BikeManagementSkeleton></BikeManagementSkeleton>
       ) : isError ? (
         <p>Error loading bikes.</p>
       ) : (

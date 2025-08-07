@@ -9,7 +9,7 @@ import {
 } from "../../../redux/api/userManagementApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loading from "../../../components/ui/Loading";
+import ProfileSkeleton from "./Skeleton/ProfileSkeleton";
 
 const UserProfilePage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -115,7 +115,7 @@ const UserProfilePage: React.FC = () => {
     }
   };
 
-  if (isFetching) return <Loading></Loading>;
+  if (isFetching) return <ProfileSkeleton></ProfileSkeleton>;
 
   if (isError) {
     toast.error("Error fetching profile data");

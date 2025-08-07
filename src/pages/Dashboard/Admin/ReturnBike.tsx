@@ -4,7 +4,7 @@ import {
   useGetAllRentalsQuery,
   useReturnBikeMutation,
 } from "../../../redux/api/bikeRentalApi";
-import Loading from "../../../components/ui/Loading";
+import ReturnBikeSkeleton from "./Skeleton/ReturnBikeSkeleton";
 
 const ReturnBike: React.FC = () => {
   // Fetch all rental data from the API
@@ -49,7 +49,7 @@ const ReturnBike: React.FC = () => {
   };
 
   // Loading state
-  if (isLoadingRentals) return <Loading></Loading>;
+  if (isLoadingRentals) return <ReturnBikeSkeleton></ReturnBikeSkeleton>;
 
   // Error state
   if (isFetchError)

@@ -20,6 +20,7 @@ import {
 import toast from "react-hot-toast";
 import { useAppSelector } from "../../../redux/hooks";
 import { useGetRentalsQuery } from "../../../redux/api/bikeRentalApi";
+import DashboardAnalyticsSkeleton from "./Skeleton/DashboardAnalytics";
 
 const Item = ({
   icon,
@@ -98,7 +99,8 @@ const UserDashboardAnalytics: React.FC = () => {
     );
   }
 
-  if (loadingRentals) return <p>Loading analytics...</p>;
+  if (loadingRentals)
+    return <DashboardAnalyticsSkeleton></DashboardAnalyticsSkeleton>;
   if (rentalsError)
     return <p className="text-red-600">Failed to load rental data.</p>;
 

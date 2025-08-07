@@ -6,12 +6,14 @@ import {
   FaGift,
   FaBars,
   FaTimes,
+  FaCog,
 } from "react-icons/fa";
 
 import AdminProfilePage from "./AdminProfilePage";
 import BikeManagement from "./BikeManagement";
 import UserManagement from "./UserManagement";
 import ReturnBike from "./ReturnBike";
+import AdminDashboardAnalytics from "./AdminDashboardAnalytics";
 
 const LOCAL_STORAGE_KEY = "admin-dashboard-selected-section";
 
@@ -48,6 +50,8 @@ const AdminDashboard: React.FC = () => {
 
   const renderContent = () => {
     switch (selectedSection) {
+      case "dashboard":
+        return <AdminDashboardAnalytics />;
       case "adminProfileManagement":
         return <AdminProfilePage />;
       case "bikesManagement":
@@ -80,6 +84,13 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           <ul className="space-y-2">
+            <SidebarItem
+              icon={<FaCog className="mr-3" />}
+              label="Dashboard"
+              section="dashboard"
+              active={selectedSection === "dashboard"}
+              onClick={handleSectionChange}
+            />
             <SidebarItem
               icon={<FaUserCog className="mr-3" />}
               label="Profile Management"

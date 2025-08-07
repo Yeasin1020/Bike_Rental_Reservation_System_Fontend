@@ -6,7 +6,7 @@ import {
 } from "../../../redux/api/userManagementApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loading from "../../../components/ui/Loading";
+import UserManagementSkeleton from "./Skeleton/UserManagementSkeleton";
 
 // Define User type locally for UI usage
 interface User {
@@ -74,7 +74,7 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  if (isLoading) return <Loading></Loading>;
+  if (isLoading) return <UserManagementSkeleton></UserManagementSkeleton>;
 
   if (isError)
     return <div className="p-6 text-red-500">{getErrorMessage(error)}</div>;
