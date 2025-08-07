@@ -5,6 +5,8 @@ import FeaturedSection from "../../components/homePageAllComponent/FeaturedSecti
 import Testimonials from "../../components/homePageAllComponent/Testimonials";
 import WhyChooseUs from "../../components/homePageAllComponent/WhyChooseUs";
 import ContactUs from "../../components/homePageAllComponent/ContactUs";
+import TestimonialPage from "../TestimonialPage/TestimonialPage";
+import PricingInfo from "../PricingInfo/PricingInfo";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -56,6 +58,26 @@ const Home = () => {
         style={{ marginTop: "3rem" }}
       >
         <ContactUs />
+      </motion.div>
+
+      <motion.div
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        style={{ marginTop: "3rem" }}
+      >
+        <PricingInfo></PricingInfo>
+      </motion.div>
+
+      <motion.div
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        style={{ marginTop: "3rem" }}
+      >
+        <TestimonialPage></TestimonialPage>
       </motion.div>
     </div>
   );
