@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const TestimonialPage: React.FC = () => {
+const NewsletterSubscriptionPage: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,21 +19,19 @@ const TestimonialPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "https://bike-rental-reservation-system-backend-gamma.vercel.app/api/testimonial",
+        "https://bike-rental-reservation-system-backend-gamma.vercel.app/api/newsletter", // You can change this to /newsletter later
         { name, email }
       );
 
       if (response.data.success) {
-        toast.success(
-          "Thank you for subscribing and sharing your testimonial!"
-        );
+        toast.success("Thank you for subscribing to our newsletter!");
         setName("");
         setEmail("");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response?.status === 409) {
-        toast.error("This email has already been used.");
+        toast.error("This email is already subscribed.");
       } else {
         toast.error("Something went wrong. Please try again.");
       }
@@ -43,16 +41,16 @@ const TestimonialPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen  flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <ToastContainer />
-      <div className="w-full max-w-xl rounded-xl shadow-lg p-8 md:p-10 ">
+      <div className="w-full max-w-xl rounded-xl shadow-lg p-8 md:p-10">
         <h1 className="text-3xl font-extrabold text-center text-gray-900 mb-6 tracking-wide">
-          Subscribe to Our Testimonial
+          Subscribe to Our Newsletter
         </h1>
 
         <p className="text-center text-gray-600 text-base mb-6">
-          Join our community! Subscribe to get the latest updates and offers,
-          and let us know about your experience.
+          Join our community! Subscribe to receive the latest news, exclusive
+          offers, and updates directly to your inbox.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -91,7 +89,7 @@ const TestimonialPage: React.FC = () => {
             }`}
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Subscribe & Submit"}
+            {loading ? "Submitting..." : "Subscribe"}
           </button>
         </form>
       </div>
@@ -99,4 +97,4 @@ const TestimonialPage: React.FC = () => {
   );
 };
 
-export default TestimonialPage;
+export default NewsletterSubscriptionPage;

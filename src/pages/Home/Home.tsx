@@ -5,7 +5,7 @@ import FeaturedSection from "../../components/homePageAllComponent/FeaturedSecti
 import Testimonials from "../../components/homePageAllComponent/Testimonials";
 import WhyChooseUs from "../../components/homePageAllComponent/WhyChooseUs";
 import ContactUs from "../../components/homePageAllComponent/ContactUs";
-import TestimonialPage from "../TestimonialPage/TestimonialPage";
+import TestimonialPage from "../NewsletterPage/NewsletterPage";
 import PricingInfo from "../PricingInfo/PricingInfo";
 
 const sectionVariants = {

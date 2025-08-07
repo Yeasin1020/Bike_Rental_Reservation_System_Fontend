@@ -1,31 +1,31 @@
 const HistoryAndMilestones = () => {
   const milestones = [
     {
-      year: "2015",
+      year: "2025",
       title: "Founding of BikeRental",
       description:
         "BikeRental was founded with the mission to provide affordable and eco-friendly bike rentals to cycling enthusiasts.",
     },
     {
-      year: "2017",
+      year: "2026",
       title: "Expansion to Multiple Cities",
       description:
         "After a successful launch, BikeRental expanded to major cities, providing customers with convenient access to bikes.",
     },
     {
-      year: "2019",
+      year: "2028",
       title: "Reached 1 Million Rides",
       description:
         "BikeRental reached a major milestone by completing over a million rides, proving our success in the bike rental industry.",
     },
     {
-      year: "2021",
+      year: "2028",
       title: "Sustainability Partnership",
       description:
         "BikeRental partnered with local organizations to promote cycling and sustainability, further solidifying our commitment to the environment.",
     },
     {
-      year: "2023",
+      year: "2028",
       title: "Launched Mobile App",
       description:
         "We launched our user-friendly mobile app, enabling customers to easily rent bikes, view availability, and track their rides.",
